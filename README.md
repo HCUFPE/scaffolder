@@ -4,7 +4,7 @@ Template pedagógico **high-opinionated** full stack para ensino e construção 
 
 ---
 
-## 🌟 Destaques do Template
+## Destaques do Template
 
 - **Arquitetura BFF Segura:** O frontend nunca manipula credenciais ou tokens JWT; a comunicação é protegida por cookies `HttpOnly` com sessões opacas salvas no banco e proteção contra CSRF.
 - **Tipagem Estrita Ponta a Ponta:** Contrato exportado em **OpenAPI 3.0** com geração automática de cliente TypeScript via **Orval** (`@/lib/api-client`).
@@ -15,7 +15,7 @@ Template pedagógico **high-opinionated** full stack para ensino e construção 
 
 ---
 
-## 🚀 Início Rápido (Setup em 1 Comando)
+## Início Rápido (Setup em 1 Comando)
 
 ### Pré-requisitos
 - **Node.js:** Versão 24 ou superior (`node -v`).
@@ -39,7 +39,7 @@ Documentação da API Swagger em: **[http://localhost:3100/api/v1/docs](http://l
 
 ---
 
-## 🔑 Credenciais Padrão de Desenvolvimento
+## Credenciais Padrão de Desenvolvimento
 
 | Usuário | E-mail | Senha | Papel | Descrição |
 | :--- | :--- | :--- | :--- | :--- |
@@ -48,7 +48,7 @@ Documentação da API Swagger em: **[http://localhost:3100/api/v1/docs](http://l
 
 ---
 
-## 🏛️ Arquitetura do Sistema
+## Arquitetura do Sistema
 
 ```text
 Browser (React SPA) <--- Cookies HttpOnly ---> NestJS API (BFF) <--- OIDC PKCE ---> Keycloak IdP
@@ -60,7 +60,7 @@ Browser (React SPA) <--- Cookies HttpOnly ---> NestJS API (BFF) <--- OIDC PKCE -
 
 ---
 
-## 📚 Documentação Técnica e Decisões (ADRs)
+## Documentação Técnica e Decisões (ADRs)
 
 | Documento | Descrição |
 | :--- | :--- |
@@ -75,7 +75,7 @@ Browser (React SPA) <--- Cookies HttpOnly ---> NestJS API (BFF) <--- OIDC PKCE -
 
 ---
 
-## 🤖 Skills de Apoio ao Desenvolvedor (AI Agents)
+## Skills de Apoio ao Desenvolvedor (AI Agents)
 
 O repositório inclui skills pedagógicas prontas em `.agent/skills/`:
 - **`appstart-feature-tutor`:** Tutor interativo que conduz o aluno passo a passo na criação de novas funcionalidades com checkpoints de validação.
@@ -84,7 +84,7 @@ O repositório inclui skills pedagógicas prontas em `.agent/skills/`:
 
 ---
 
-## 🛠️ Mapa de Comandos do Repositório
+## Mapa de Comandos do Repositório
 
 ```bash
 # Desenvolvimento & Setup
