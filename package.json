@@ -1,0 +1,39 @@
+{
+  "name": "appstart",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Template AppStart com setup local e scaffolding guiado para projetos derivados.",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "node": ">=24",
+    "pnpm": ">=9 <10"
+  },
+  "scripts": {
+    "scaffold": "bash ./setup.sh",
+    "check:runtime": "node scripts/check-runtime.mjs",
+    "check:env": "node scripts/check-env.mjs",
+    "setup": "node scripts/setup.mjs",
+    "dev": "node scripts/dev.mjs",
+    "db:up": "node scripts/db-up.mjs",
+    "db:down": "node scripts/db-down.mjs",
+    "auth:render": "node scripts/keycloak-render-realm.mjs",
+    "auth:up": "node scripts/auth-up.mjs",
+    "auth:down": "node scripts/auth-down.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "db:check": "node scripts/db-check-migrations.mjs",
+    "db:deploy": "node scripts/db-deploy.mjs",
+    "db:seed": "node scripts/db-seed.mjs",
+    "db:studio": "node scripts/db-studio.mjs",
+    "api:dev": "pnpm --dir apps/api dev",
+    "api:generate": "node scripts/generate-api.mjs",
+    "api:check": "node scripts/check-api-divergence.mjs",
+    "web:dev": "pnpm --dir apps/web dev",
+    "test": "pnpm --dir apps/api test && pnpm --dir apps/web test",
+    "docs:check": "node scripts/check-docs-integrity.mjs",
+    "check:all": "pnpm test && pnpm --dir apps/web build && pnpm api:check && pnpm docs:check"
+  },
+  "devDependencies": {
+    "orval": "^8.27.0",
+    "tsx": "^4.23.13"
+  }
+}

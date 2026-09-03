@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env
+.turbo/
+.prisma/
+coverage/
+playwright-report/
+infra/keycloak/realm-import/*.realm.json

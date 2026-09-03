@@ -1,0 +1,51 @@
+name: Prisma migrations
+
+on:
+  pull_request:
+    paths:
+      - "apps/api/prisma/**"
+      - "scripts/db-check-migrations.mjs"
+      - "apps/api/package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/prisma-migrations.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/api/prisma/**"
+      - "scripts/db-check-migrations.mjs"
+      - "apps/api/package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/prisma-migrations.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: appstart_shadow
+          POSTGRES_USER: appstart
+          POSTGRES_PASSWORD: appstart_ci_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U appstart -d appstart_shadow"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgresql://appstart:appstart_ci_password@localhost:5432/appstart_shadow?schema=public
+      SHADOW_DATABASE_URL: postgresql://appstart:appstart_ci_password@localhost:5432/appstart_shadow?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm db:check

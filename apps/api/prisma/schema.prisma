@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model UserProfile {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  keycloakUserId String    @unique
+  name           String
+  email          String    @unique
+  roleSnapshot   UserRole  @default(USER)
+  isActiveLocal  Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+  tasks          Task[]
+
+  @@map("user_profiles")
+}
+
+model Session {
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tokenHash       String      @unique
+  userProfileId   String      @db.Uuid
+  keycloakSubject String
+  expiresAt       DateTime
+  createdAt       DateTime    @default(now())
+  lastUsedAt      DateTime    @default(now())
+  userProfile     UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  @@index([userProfileId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+model Task {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  status      TaskStatus   @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime?
+  ownerId     String       @db.Uuid
+  deletedAt   DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  owner       UserProfile  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId])
+  @@index([deletedAt])
+  @@index([status])
+  @@map("tasks")
+}
