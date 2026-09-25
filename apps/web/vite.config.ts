@@ -13,6 +13,10 @@ export default defineConfig({
       '@': resolve(import.meta.dirname, './src'),
     },
   },
+  define: {
+    'import.meta.env.VITE_DEV_ADMIN_EMAIL': JSON.stringify(process.env.DEV_ADMIN_EMAIL || 'admin@appstart.local'),
+    'import.meta.env.VITE_DEV_USER_EMAIL': JSON.stringify(process.env.DEV_USER_EMAIL || 'user@appstart.local'),
+  },
   server: {
     port: 5173,
     proxy: {

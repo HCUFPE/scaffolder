@@ -37,6 +37,8 @@ export function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const returnTo = searchParams.get('returnTo') || '/';
+  const ADMIN_EMAIL = import.meta.env.VITE_DEV_ADMIN_EMAIL || 'admin@appstart.local';
+  const USER_EMAIL = import.meta.env.VITE_DEV_USER_EMAIL || 'user@appstart.local';
 
   const {
     register,
@@ -128,7 +130,7 @@ export function LoginPage() {
                     id="username"
                     type="text"
                     autoComplete="username"
-                    placeholder="ex: admin@appstart.local"
+                    placeholder={`ex: ${ADMIN_EMAIL}`}
                     className="pl-9 h-10 text-sm"
                     {...register('username')}
                   />
@@ -186,7 +188,7 @@ export function LoginPage() {
             <div className="grid grid-cols-2 gap-2 w-full pt-1">
               <button
                 type="button"
-                onClick={() => autofillCredentials('admin@appstart.local', 'ChangeMe123456!')}
+                onClick={() => autofillCredentials(ADMIN_EMAIL, 'ChangeMe123456!')}
                 className="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
               >
                 <span className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-[11px] group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -194,7 +196,7 @@ export function LoginPage() {
                   <span>Administrador</span>
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
-                  admin@appstart.local
+                  {ADMIN_EMAIL}
                 </span>
                 <code className="text-[9px] text-blue-600 dark:text-blue-400 font-mono block mt-0.5">
                   ChangeMe123456!
@@ -203,7 +205,7 @@ export function LoginPage() {
 
               <button
                 type="button"
-                onClick={() => autofillCredentials('user@appstart.local', 'ChangeMe123456!')}
+                onClick={() => autofillCredentials(USER_EMAIL, 'ChangeMe123456!')}
                 className="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 text-left transition-all cursor-pointer group shadow-2xs hover:shadow-xs"
               >
                 <span className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-[11px] group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -211,7 +213,7 @@ export function LoginPage() {
                   <span>Usuário</span>
                 </span>
                 <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
-                  user@appstart.local
+                  {USER_EMAIL}
                 </span>
                 <code className="text-[9px] text-blue-600 dark:text-blue-400 font-mono block mt-0.5">
                   ChangeMe123456!
