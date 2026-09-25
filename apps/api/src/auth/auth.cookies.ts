@@ -40,7 +40,11 @@ export function clearCorrelationCookieOptions(config: AuthConfig): CookieOptions
 
 export function assertTrustedOrigin(request: Request, config: AuthConfig): void {
   const origin = request.headers.origin;
-  if (!origin || origin !== new URL(config.webBaseUrl).origin) {
+  const isLocalhostOrigin = 
+    config.nodeEnv === 'development' && 
+    (origin?.startsWith('http://localhost:') || origin?.startsWith('https://localhost:'));
+
+  if (!origin || (origin !== new URL(config.webBaseUrl).origin && !isLocalhostOrigin)) {
     throw new Error(`Origem da requisição não permitida. Esperado: ${new URL(config.webBaseUrl).origin}, Recebido: ${origin || 'ausente'}`);
   }
 }

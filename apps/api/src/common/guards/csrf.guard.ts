@@ -48,9 +48,12 @@ export class CsrfGuard implements CanActivate {
     const origin = request.headers.origin;
     const referer = request.headers.referer;
     const expectedOrigin = new URL(this.config.webBaseUrl).origin;
+    const isLocalhostOrigin = 
+      this.config.nodeEnv === 'development' && 
+      (origin?.startsWith('http://localhost:') || origin?.startsWith('https://localhost:'));
 
     if (origin) {
-      if (origin !== expectedOrigin) {
+      if (origin !== expectedOrigin && !isLocalhostOrigin) {
         throw new ForbiddenException(`Origem da requisição não permitida. Esperado: ${expectedOrigin}, Recebido: ${origin}`);
       }
       return;
