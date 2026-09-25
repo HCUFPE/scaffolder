@@ -33,10 +33,11 @@ export const customFetch = async <T>(
 
   if (!response.ok) {
     let errorBody: unknown;
+    const text = await response.text();
     try {
-      errorBody = await response.json();
+      errorBody = text ? JSON.parse(text) : undefined;
     } catch {
-      errorBody = await response.text();
+      errorBody = text;
     }
     throw errorBody;
   }
@@ -44,10 +45,15 @@ export const customFetch = async <T>(
   let data: unknown = undefined;
   if (response.status !== 204) {
     const contentType = response.headers.get('content-type');
+    const text = await response.text();
     if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
+      try {
+        data = text ? JSON.parse(text) : undefined;
+      } catch {
+        data = text;
+      }
     } else {
-      data = await response.text();
+      data = text;
     }
   }
 
