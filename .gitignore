@@ -6,3 +6,4 @@ dist/
 coverage/
 playwright-report/
 infra/keycloak/realm-import/*.realm.json
+playground/
