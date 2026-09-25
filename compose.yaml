@@ -10,6 +10,7 @@ services:
       KEYCLOAK_DB_NAME: ${KEYCLOAK_DB_NAME}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
+      - "${KEYCLOAK_PORT:-8080}:8080"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
@@ -23,13 +24,14 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
     container_name: appstart-keycloak
+    network_mode: "service:postgres"
     restart: unless-stopped
     command:
       - start-dev
       - --import-realm
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/${KEYCLOAK_DB_NAME}
+      KC_DB_URL: jdbc:postgresql://localhost:5432/${KEYCLOAK_DB_NAME}
       JAVA_OPTS_APPEND: "-Djava.net.preferIPv4Stack=true"
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
@@ -39,8 +41,6 @@ services:
       KC_HEALTH_ENABLED: "true"
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    ports:
-      - "${KEYCLOAK_PORT:-8080}:8080"
     depends_on:
       postgres:
         condition: service_healthy
