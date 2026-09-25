@@ -17,18 +17,18 @@ Template pedagógico **high-opinionated** full stack para ensino e construção 
 
 ## Início Rápido
 
-### 1. Para criar um novo projeto a partir deste template
-Se você quer iniciar uma nova aplicação baseada no AppStart, não é necessário instalar dependências manualmente. Basta rodar o script de scaffolding interativo:
+### 1. Para criar o seu próprio projeto (Fluxo do Aluno)
+Recomendamos o uso do **GitHub Codespaces** para não precisar configurar nada na sua máquina.
+
+1. Clique no botão verde **"Use this template"** no topo desta página e crie o seu próprio repositório.
+2. Abra o repositório recém-criado no **Codespaces** (ou clone localmente).
+3. No terminal do VSCode, rode o comando mágico de configuração:
 
 ```bash
-# Clone o repositório do template
-git clone https://github.com/sua-org/appstart.git
-cd appstart
-
-# Inicie o assistente interativo para gerar o projeto já subindo os serviços (banco/auth)
-bash ./setup.sh --bootstrap
+# O assistente vai renomear os arquivos, instalar dependências e subir o banco de dados
+bash ./setup.sh --in-place --bootstrap
 ```
-O assistente vai pedir o nome do projeto, portas, gerar credenciais, copiar todos os arquivos para uma nova pasta e fazer toda a instalação (`pnpm install`, `pnpm setup`, etc.) automaticamente de forma isolada!
+O script fará algumas perguntas (nome do projeto, portas) e vai transformar esse template no seu projeto final de forma automática!
 
 ---
 
