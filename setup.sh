@@ -53,7 +53,7 @@ Opções:
   --git-remote <url>          Remote Git opcional para o projeto derivado
   --skip-install              Não executa pnpm install
   --skip-git                  Não executa git init
-  --bootstrap                 Executa pnpm setup ao final
+  --bootstrap                 Executa pnpm run setup ao final
   --in-place                  Configura o repositório no diretório atual (não faz cópia)
   -h, --help                  Mostra esta ajuda
 
@@ -383,7 +383,7 @@ if (fs.existsSync(webPackagePath)) {
 updateEnvFile('.env.example');
 updateEnvFile('.env');
 
-updateText('README.md', () => `# ${title}\n\n${projectDescription}\n\nProjeto gerado a partir do template AppStart.\n\n## Primeiro uso\n\n\`\`\`bash\ncorepack enable\npnpm install\npnpm setup\npnpm dev\n\`\`\`\n\n## Scripts principais\n\n- \`pnpm setup\`: sobe PostgreSQL e Keycloak, aplica migrations e executa o seed\n- \`pnpm dev\`: inicia API e frontend em paralelo\n- \`pnpm db:up\`: sobe o PostgreSQL local\n- \`pnpm db:down\`: para o PostgreSQL sem remover o volume\n- \`pnpm auth:up\`: provisiona e sobe o Keycloak local\n- \`pnpm auth:down\`: para o Keycloak sem remover dados\n- \`pnpm db:migrate\`: aplica migrations Prisma no ambiente local\n- \`pnpm db:check\`: valida schema e migrations com um banco de shadow\n- \`pnpm db:deploy\`: aplica migrations em produção com prisma migrate deploy\n- \`pnpm db:seed\`: executa o seed de desenvolvimento\n- \`pnpm db:studio\`: abre o Prisma Studio\n\n## Configuração inicial\n\nRevise o arquivo \`.env\` gerado automaticamente antes de compartilhar o projeto.\n\n## Usuários de desenvolvimento\n\nAs credenciais são definidas pelas variáveis \`DEV_ADMIN_*\` e \`DEV_USER_*\` no \`.env\`.\n`);
+updateText('README.md', () => `# ${title}\n\n${projectDescription}\n\nProjeto gerado a partir do template AppStart.\n\n## Primeiro uso\n\n\`\`\`bash\ncorepack enable\npnpm install\npnpm run setup\npnpm dev\n\`\`\`\n\n## Scripts principais\n\n- \`pnpm run setup\`: sobe PostgreSQL e Keycloak, aplica migrations e executa o seed\n- \`pnpm dev\`: inicia API e frontend em paralelo\n- \`pnpm db:up\`: sobe o PostgreSQL local\n- \`pnpm db:down\`: para o PostgreSQL sem remover o volume\n- \`pnpm auth:up\`: provisiona e sobe o Keycloak local\n- \`pnpm auth:down\`: para o Keycloak sem remover dados\n- \`pnpm db:migrate\`: aplica migrations Prisma no ambiente local\n- \`pnpm db:check\`: valida schema e migrations com um banco de shadow\n- \`pnpm db:deploy\`: aplica migrations em produção com prisma migrate deploy\n- \`pnpm db:seed\`: executa o seed de desenvolvimento\n- \`pnpm db:studio\`: abre o Prisma Studio\n\n## Configuração inicial\n\nRevise o arquivo \`.env\` gerado automaticamente antes de compartilhar o projeto.\n\n## Usuários de desenvolvimento\n\nAs credenciais são definidas pelas variáveis \`DEV_ADMIN_*\` e \`DEV_USER_*\` no \`.env\`.\n`);
 
 updateText('compose.yaml', (text) => text
   .replace(/appstart-postgres/g, `${projectName}-postgres`)
@@ -424,7 +424,7 @@ if [[ "$BOOTSTRAP" -eq 1 ]]; then
   info "Executando bootstrap inicial do ambiente..."
   (
     cd "$TARGET_DIR"
-    pnpm setup
+    pnpm run setup
   )
   ok "Bootstrap concluído"
 fi
@@ -457,7 +457,7 @@ if [[ "$SKIP_INSTALL" -eq 1 ]]; then
   echo "    pnpm install"
 fi
 if [[ "$BOOTSTRAP" -eq 0 ]]; then
-  echo "    pnpm setup"
+  echo "    pnpm run setup"
 fi
 echo "    pnpm dev"
 echo ""

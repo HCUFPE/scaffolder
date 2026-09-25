@@ -44,7 +44,7 @@ pnpm install
 cp .env.example .env
 
 # 3. Executar setup completo (PostgreSQL + Keycloak + Migrations + Seed + Contratos)
-pnpm setup
+pnpm run setup
 
 # 4. Iniciar servidores de desenvolvimento (API + Web)
 pnpm dev
@@ -104,7 +104,7 @@ O repositório inclui skills pedagógicas prontas em `.agent/skills/`:
 
 ```bash
 # Desenvolvimento & Setup
-pnpm setup          # Executa o provisionamento inicial completo
+pnpm run setup          # Executa o provisionamento inicial completo
 pnpm dev            # Inicia API (3100) e Web (5173) em paralelo
 pnpm scaffold       # Scaffolding interativo para criar novos projetos derivados
 
