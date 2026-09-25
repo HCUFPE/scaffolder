@@ -402,14 +402,6 @@ if [[ "$SKIP_GIT" -eq 0 ]]; then
       fi
     )
     ok "Repositório Git inicializado"
-  else
-    info "Registrando alterações no Git..."
-    (
-      cd "$TARGET_DIR"
-      git add . >/dev/null 2>&1 || true
-      git commit -m "chore: scaffold in-place executado" >/dev/null 2>&1 || true
-    )
-    ok "Alterações do scaffold registradas"
   fi
 else
   warn "Etapa do Git ignorada por --skip-git"
@@ -444,6 +436,14 @@ else
   ok "Projeto '${PROJECT_NAME}' configurado com sucesso!"
   # Clean up setup script in-place
   rm -- "$0"
+  if [[ "$SKIP_GIT" -eq 0 ]]; then
+    (
+      cd "$TARGET_DIR"
+      git add . >/dev/null 2>&1 || true
+      git commit -m "chore: scaffold in-place executado" >/dev/null 2>&1 || true
+    )
+    ok "Alterações consolidadas no Git"
+  fi
 fi
 echo ""
 info "Próximos passos:"
