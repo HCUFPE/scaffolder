@@ -270,7 +270,14 @@ export class OidcService {
     const response = await this.fetchWithTimeout(`${this.config.issuer}/.well-known/openid-configuration`);
     if (!response.ok) throw new ServiceUnavailableException('Keycloak indisponível para discovery OIDC.');
     const value = (await response.json()) as Partial<OidcDiscovery>;
-    if (value.issuer !== this.config.issuer) throw new ServiceUnavailableException('Issuer OIDC inesperado.');
+    
+    const isLocalhostIssuer = 
+      this.config.nodeEnv === 'development' && 
+      (value.issuer?.startsWith('http://localhost:') || value.issuer?.startsWith('https://localhost:'));
+
+    if (value.issuer !== this.config.issuer && !isLocalhostIssuer) {
+      throw new ServiceUnavailableException(`Issuer OIDC inesperado. Esperado: ${this.config.issuer}, Recebido: ${value.issuer}`);
+    }
     for (const key of ['authorization_endpoint', 'token_endpoint', 'jwks_uri'] as const) {
       if (typeof value[key] !== 'string') throw new ServiceUnavailableException(`Discovery OIDC sem ${key}.`);
       try {
