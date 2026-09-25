@@ -174,7 +174,7 @@ require_value() {
   fi
 
   if [[ ! -t 0 ]]; then
-    fail "Parâmetro obrigatório ausente em modo não interativo: $prompt"
+    fail "Parâmetro obrigatório ausente em modo não interativo: $prompt" >&2
     exit 1
   fi
 
@@ -189,6 +189,9 @@ info "Validando pré-requisitos do ambiente..."
 if [[ "$IN_PLACE" -eq 0 && -n "$TARGET_DIR" ]]; then
   if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
     fail "O diretório '$TARGET_DIR' já existe e não está vazio."
+    echo "  Conteúdo encontrado no diretório:"
+    ls -la "$TARGET_DIR" | head -n 10 | sed 's/^/    /'
+    echo ""
     echo "  Remova-o ou escolha outro diretório antes de continuar:"
     echo "    rm -rf $TARGET_DIR"
     exit 1
@@ -219,6 +222,9 @@ else
 
   if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
     fail "O diretório '$TARGET_DIR' já existe e não está vazio."
+    echo "  Conteúdo encontrado no diretório:"
+    ls -la "$TARGET_DIR" | head -n 10 | sed 's/^/    /'
+    echo ""
     echo "  Remova-o ou escolha outro diretório antes de continuar:"
     echo "    rm -rf $TARGET_DIR"
     exit 1
