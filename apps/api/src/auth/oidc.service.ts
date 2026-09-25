@@ -142,16 +142,16 @@ export class OidcService {
     let payload: KeycloakClaims;
     try {
       const verified = await jwtVerify<KeycloakClaims>(tokenResponse.id_token, jwks, {
-        issuer: this.config.issuer,
+        issuer: [this.config.issuer, discovery.issuer],
         audience: this.config.clientId,
       });
       payload = verified.payload;
-    } catch {
-      throw new UnauthorizedException('Identidade retornada pelo provedor é inválida.');
+    } catch (e: any) {
+      throw new UnauthorizedException(`Identidade retornada pelo provedor é inválida: ${e.message}`);
     }
 
     if (typeof payload.nonce !== 'string' || !equalStrings(payload.nonce, correlation.nonce)) {
-      throw new UnauthorizedException('Identidade retornada pelo provedor é inválida.');
+      throw new UnauthorizedException(`Identidade retornada pelo provedor é inválida: ${"nonce mismatch"}`);
     }
     if (typeof payload.sub !== 'string' || typeof payload.email !== 'string') {
       throw new UnauthorizedException('O provedor não retornou a identidade mínima necessária.');
@@ -212,12 +212,12 @@ export class OidcService {
     let payload: KeycloakClaims;
     try {
       const verified = await jwtVerify<KeycloakClaims>(tokenResponse.id_token, jwks, {
-        issuer: this.config.issuer,
+        issuer: [this.config.issuer, discovery.issuer],
         audience: this.config.clientId,
       });
       payload = verified.payload;
-    } catch {
-      throw new UnauthorizedException('Identidade retornada pelo provedor é inválida.');
+    } catch (e: any) {
+      throw new UnauthorizedException(`Identidade retornada pelo provedor é inválida: ${e.message}`);
     }
 
     if (typeof payload.sub !== 'string' || typeof payload.email !== 'string') {
