@@ -5,7 +5,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 try {
   const env = validateEnv();
   const realmUrl = `${env.KEYCLOAK_BASE_URL.replace(/\/$/, '')}/realms/${env.KEYCLOAK_REALM}/.well-known/openid-configuration`;
-  const timeoutMs = 120_000;
+  const timeoutMs = 180_000;
   const startedAt = Date.now();
 
   while (Date.now() - startedAt < timeoutMs) {
