@@ -434,8 +434,6 @@ if [[ "$IN_PLACE" -eq 0 ]]; then
   ok "Projeto '${PROJECT_NAME}' criado com sucesso!"
 else
   ok "Projeto '${PROJECT_NAME}' configurado com sucesso!"
-  # Clean up setup script in-place
-  rm -- "$0"
   if [[ "$SKIP_GIT" -eq 0 ]]; then
     (
       cd "$TARGET_DIR"
