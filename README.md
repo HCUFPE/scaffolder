@@ -25,8 +25,8 @@ Se você quer iniciar uma nova aplicação baseada no AppStart, não é necessá
 git clone https://github.com/sua-org/appstart.git
 cd appstart
 
-# Inicie o assistente interativo para gerar o seu novo projeto
-bash ./setup.sh
+# Inicie o assistente interativo para gerar o projeto já subindo os serviços (banco/auth)
+bash ./setup.sh --bootstrap
 ```
 O assistente vai pedir o nome do projeto, portas, gerar credenciais, copiar todos os arquivos para uma nova pasta e fazer toda a instalação (`pnpm install`, `pnpm setup`, etc.) automaticamente de forma isolada!
 
