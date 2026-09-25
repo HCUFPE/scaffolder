@@ -41,6 +41,6 @@ export function clearCorrelationCookieOptions(config: AuthConfig): CookieOptions
 export function assertTrustedOrigin(request: Request, config: AuthConfig): void {
   const origin = request.headers.origin;
   if (!origin || origin !== new URL(config.webBaseUrl).origin) {
-    throw new Error('Origem da requisição não permitida.');
+    throw new Error(`Origem da requisição não permitida. Esperado: ${new URL(config.webBaseUrl).origin}, Recebido: ${origin || 'ausente'}`);
   }
 }
