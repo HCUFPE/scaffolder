@@ -186,6 +186,15 @@ require_value() {
 info "Validando pré-requisitos do ambiente..."
 # bash "$ROOT_DIR/check_dependencies.sh"
 
+if [[ "$IN_PLACE" -eq 0 && -n "$TARGET_DIR" ]]; then
+  if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
+    fail "O diretório '$TARGET_DIR' já existe e não está vazio."
+    echo "  Remova-o ou escolha outro diretório antes de continuar:"
+    echo "    rm -rf $TARGET_DIR"
+    exit 1
+  fi
+fi
+
 if [[ -t 1 ]]; then
   clear
 fi
@@ -210,6 +219,8 @@ else
 
   if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
     fail "O diretório '$TARGET_DIR' já existe e não está vazio."
+    echo "  Remova-o ou escolha outro diretório antes de continuar:"
+    echo "    rm -rf $TARGET_DIR"
     exit 1
   fi
 fi
