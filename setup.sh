@@ -406,6 +406,13 @@ updateText('compose.yaml', (text) => text
   .replace(/appstart-postgres/g, `${projectName}-postgres`)
   .replace(/appstart-keycloak/g, `${projectName}-keycloak`));
 updateText('apps/web/dev-server.mjs', (text) => text.replace(/AppStart/g, title));
+updateText('apps/web/src/pages/login-page.tsx', (text) => text
+  .replace(/appstart\.local/g, `${projectName}.local`)
+  .replace(/AppStart/g, title)
+);
+updateText('apps/web/src/pages/login-page.spec.tsx', (text) => text
+  .replace(/appstart\.local/g, `${projectName}.local`)
+);
 NODE
 ok "Configuração inicial aplicada"
 
