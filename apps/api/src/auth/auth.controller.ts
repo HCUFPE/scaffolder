@@ -160,8 +160,8 @@ export class AuthController {
   private checkOrigin(request: Request): void {
     try {
       assertTrustedOrigin(request, this.config);
-    } catch {
-      throw new ForbiddenException('Origem da requisição não permitida.');
+    } catch (e: any) {
+      throw new ForbiddenException(e.message || 'Origem da requisição não permitida.');
     }
   }
 }
