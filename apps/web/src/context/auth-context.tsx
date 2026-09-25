@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { authControllerDirectLogin, authControllerLogout, authControllerMe } from '../lib/api-client';
-import type { AuthMeResponseDto, LoginRequestDto, ProblemDetailsDto, SafeUserProfileDto } from '../lib/api-client/models';
+import type { AuthMeResponseDto, LoginRequestDto, SafeUserProfileDto } from '../lib/api-client/models';
 
 interface AuthContextType {
   user: SafeUserProfileDto | null;
@@ -41,14 +41,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [fetchCurrentUser]);
 
   const login = useCallback(async (credentials: LoginRequestDto): Promise<SafeUserProfileDto> => {
-    const res = await authControllerDirectLogin(credentials);
-    if (res && res.status === 200 && 'user' in (res.data as AuthMeResponseDto)) {
-      const loggedUser = (res.data as AuthMeResponseDto).user;
-      setUser(loggedUser);
-      return loggedUser;
+    try {
+      const res = await authControllerDirectLogin(credentials);
+      if (res && res.status === 200 && 'user' in (res.data as AuthMeResponseDto)) {
+        const loggedUser = (res.data as AuthMeResponseDto).user;
+        setUser(loggedUser);
+        return loggedUser;
+      }
+      throw new Error('Formato de resposta inesperado.');
+    } catch (err: any) {
+      const detail = err?.detail || err?.message;
+      throw new Error(detail || 'Não foi possível autenticar com as credenciais informadas.');
     }
-    const problem = res.data as ProblemDetailsDto;
-    throw new Error(problem?.detail || 'Não foi possível autenticar com as credenciais informadas.');
   }, []);
 
   const loginFederated = useCallback((returnTo?: string) => {

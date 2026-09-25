@@ -646,7 +646,7 @@ O cookie de sessão é emitido pela aplicação após o callback bem-sucedido co
 | `POSTGRES_PORT` | Não | Porta publicada pelo Compose. |
 | `KEYCLOAK_DB_NAME` | Sim no Compose | Banco dedicado ao Keycloak no PostgreSQL local. |
 | `KEYCLOAK_PORT` | Não | Porta HTTP local do Keycloak. |
-| `KEYCLOAK_BASE_URL` | Sim | URL base do Keycloak. |
+| `KEYCLOAK_BASE_URL` | Opcional (derivada) | URL base do Keycloak (derivada de KEYCLOAK_PORT se omitida). |
 | `KEYCLOAK_REALM` | Sim | Realm padrão provisionado para a aplicação. |
 | `KEYCLOAK_CLIENT_ID` | Sim | Client usado pela aplicação para iniciar autenticação. |
 | `KEYCLOAK_CLIENT_SECRET` | Conforme fluxo | Segredo do client confidencial quando aplicável. |

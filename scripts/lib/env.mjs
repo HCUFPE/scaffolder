@@ -4,16 +4,13 @@ import path from 'node:path';
 const REQUIRED_KEYS = [
   'NODE_ENV',
   'API_PORT',
-  'API_BASE_URL',
   'WEB_PORT',
-  'WEB_BASE_URL',
   'POSTGRES_DB',
   'POSTGRES_USER',
   'POSTGRES_PASSWORD',
   'POSTGRES_PORT',
   'KEYCLOAK_DB_NAME',
   'KEYCLOAK_PORT',
-  'KEYCLOAK_BASE_URL',
   'KEYCLOAK_REALM',
   'KEYCLOAK_CLIENT_ID',
   'KEYCLOAK_CLIENT_SECRET',
@@ -116,6 +113,19 @@ export function validateEnv() {
   for (const key of ['KEYCLOAK_REALM', 'KEYCLOAK_CLIENT_ID', 'KEYCLOAK_ADMIN_CLIENT_ID']) {
     if (!/^[a-zA-Z0-9._-]+$/.test(env[key])) {
       throw new Error(`Valor inválido para ${key}: ${env[key]}. Use apenas letras, números, ponto, hífen e underscore.`);
+    }
+  }
+
+  // Deriva _BASE_URL a partir de _PORT quando não definida explicitamente
+  const urlDefaults = {
+    API_BASE_URL: `http://localhost:${env.API_PORT}`,
+    WEB_BASE_URL: `http://localhost:${env.WEB_PORT}`,
+    KEYCLOAK_BASE_URL: `http://localhost:${env.KEYCLOAK_PORT}`,
+  };
+  for (const [key, fallback] of Object.entries(urlDefaults)) {
+    if (!env[key]) {
+      env[key] = fallback;
+      process.env[key] = fallback;
     }
   }
 

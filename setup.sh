@@ -174,6 +174,10 @@ require_value() {
   fi
 
   if [[ ! -t 0 ]]; then
+    if [[ -n "$default_value" ]]; then
+      printf '%s' "$default_value"
+      return 0
+    fi
     fail "Parâmetro obrigatório ausente em modo não interativo: $prompt" >&2
     exit 1
   fi
@@ -199,7 +203,7 @@ if [[ "$IN_PLACE" -eq 0 && -n "$TARGET_DIR" ]]; then
 fi
 
 if [[ -t 1 ]]; then
-  clear
+  clear 2>/dev/null || true
 fi
 bold ""
 bold "  ┌─────────────────────────────────────────────┐"
@@ -338,9 +342,7 @@ function updateEnvFile(relativePath) {
   const replacements = {
     NODE_ENV: 'development',
     API_PORT: apiPort,
-    API_BASE_URL: `http://localhost:${apiPort}`,
     WEB_PORT: webPort,
-    WEB_BASE_URL: `http://localhost:${webPort}`,
     POSTGRES_DB: dbName,
     POSTGRES_USER: dbUser,
     POSTGRES_PASSWORD: dbPassword,
@@ -348,7 +350,6 @@ function updateEnvFile(relativePath) {
     KEYCLOAK_DB_NAME: `${dbName}_keycloak`,
     DATABASE_URL: databaseUrl,
     KEYCLOAK_PORT: keycloakPort,
-    KEYCLOAK_BASE_URL: `http://localhost:${keycloakPort}`,
     KEYCLOAK_REALM: projectName,
     KEYCLOAK_CLIENT_ID: `${projectName}-server`,
     KEYCLOAK_CLIENT_SECRET: `${slug}_dev_client_secret`,
