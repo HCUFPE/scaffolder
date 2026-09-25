@@ -30,6 +30,15 @@ bash ./setup.sh --in-place --bootstrap
 ```
 O script fará algumas perguntas (nome do projeto, portas) e vai transformar esse template no seu projeto final de forma automática!
 
+> ⚠️ **Atenção no Codespaces (Erro de CORS/CSRF):**
+> Se ao tentar fazer login o painel mostrar "Origem não permitida" ou "CORS error", é porque o backend foi feito para proteger contra acessos de URLs desconhecidas. Abra o seu arquivo `.env` e troque os `http://localhost` para as URLs públicas que o Codespaces gerou para você (mantendo as portas):
+> ```env
+> API_BASE_URL=https://NOME-DO-SEU-CODESPACE-3000.app.github.dev
+> WEB_BASE_URL=https://NOME-DO-SEU-CODESPACE-5173.app.github.dev
+> KEYCLOAK_BASE_URL=https://NOME-DO-SEU-CODESPACE-8080.app.github.dev
+> ```
+> Após alterar o `.env`, reinicie o servidor (`pnpm dev`) para ele ler as novas URLs!
+
 ---
 
 ### 2. Para rodar e contribuir com o Template (Ambiente Local)
