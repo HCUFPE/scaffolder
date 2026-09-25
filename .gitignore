@@ -7,3 +7,7 @@ coverage/
 playwright-report/
 infra/keycloak/realm-import/*.realm.json
 playground/
+.codex-build/
+.codex-finalizer/
+output/
+tmp/
