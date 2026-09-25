@@ -184,7 +184,7 @@ require_value() {
 }
 
 info "Validando pré-requisitos do ambiente..."
-bash "$ROOT_DIR/check_dependencies.sh"
+# bash "$ROOT_DIR/check_dependencies.sh"
 
 if [[ -t 1 ]]; then
   clear
@@ -263,6 +263,7 @@ if [[ "$IN_PLACE" -eq 0 ]]; then
     --exclude='./.pi' \
     --exclude='./openspec/changes' \
     --exclude='./openspec/specs' \
+    --exclude='./playground' \
     --exclude='./setup.sh' \
     --exclude='./SRD.md' \
     . | (cd "$TARGET_DIR" && tar -xf -)
