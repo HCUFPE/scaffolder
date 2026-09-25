@@ -15,22 +15,38 @@ Template pedagógico **high-opinionated** full stack para ensino e construção 
 
 ---
 
-## Início Rápido (Setup em 1 Comando)
+## Início Rápido
 
-### Pré-requisitos
-- **Node.js:** Versão 24 ou superior (`node -v`).
-- **PNPM:** Versão 9 ou superior (`pnpm -v`).
-- **Docker & Docker Compose:** Em execução (`docker info`).
+### 1. Para criar um novo projeto a partir deste template
+Se você quer iniciar uma nova aplicação baseada no AppStart, não é necessário instalar dependências manualmente. Basta rodar o script de scaffolding interativo:
 
-### 1. Clonar e Instalar
 ```bash
-# 1. Copiar variáveis de ambiente
+# Clone o repositório do template
+git clone https://github.com/sua-org/appstart.git
+cd appstart
+
+# Inicie o assistente interativo para gerar o seu novo projeto
+bash ./setup.sh
+```
+O assistente vai pedir o nome do projeto, portas, gerar credenciais, copiar todos os arquivos para uma nova pasta e fazer toda a instalação (`pnpm install`, `pnpm setup`, etc.) automaticamente de forma isolada!
+
+---
+
+### 2. Para rodar e contribuir com o Template (Ambiente Local)
+Se você quer fazer alterações no template original em si, siga o fluxo de desenvolvimento local:
+
+```bash
+# 1. Habilitar o pnpm e instalar as dependências do template
+corepack enable
+pnpm install
+
+# 2. Copiar variáveis de ambiente
 cp .env.example .env
 
-# 2. Executar setup completo (PostgreSQL + Keycloak + Migrations + Seed + Contratos)
+# 3. Executar setup completo (PostgreSQL + Keycloak + Migrations + Seed + Contratos)
 pnpm setup
 
-# 3. Iniciar servidores de desenvolvimento (API + Web)
+# 4. Iniciar servidores de desenvolvimento (API + Web)
 pnpm dev
 ```
 
