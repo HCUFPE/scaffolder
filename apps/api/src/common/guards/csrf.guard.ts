@@ -51,7 +51,7 @@ export class CsrfGuard implements CanActivate {
 
     if (origin) {
       if (origin !== expectedOrigin) {
-        throw new ForbiddenException('Origem da requisição não permitida.');
+        throw new ForbiddenException(`Origem da requisição não permitida. Esperado: ${expectedOrigin}, Recebido: ${origin}`);
       }
       return;
     }
