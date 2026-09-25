@@ -25,6 +25,7 @@ GIT_REMOTE_URL=""
 SKIP_INSTALL=0
 SKIP_GIT=0
 BOOTSTRAP=0
+IN_PLACE=0
 
 info()  { echo -e "${CYAN}⚡${NC} $1"; }
 ok()    { echo -e "${GREEN}✓${NC} $1"; }
@@ -53,6 +54,7 @@ Opções:
   --skip-install              Não executa pnpm install
   --skip-git                  Não executa git init
   --bootstrap                 Executa pnpm setup ao final
+  --in-place                  Configura o repositório no diretório atual (não faz cópia)
   -h, --help                  Mostra esta ajuda
 
 Exemplo interativo:
@@ -126,6 +128,10 @@ while [[ $# -gt 0 ]]; do
       BOOTSTRAP=1
       shift
       ;;
+    --in-place)
+      IN_PLACE=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -196,12 +202,16 @@ while ! validate_project_name "$PROJECT_NAME"; do
   PROJECT_NAME="$(require_value "" "Nome do projeto (kebab-case): ")"
 done
 
-DEFAULT_TARGET_DIR="../$PROJECT_NAME"
-TARGET_DIR="$(require_value "$TARGET_DIR" "Diretório de destino [${DEFAULT_TARGET_DIR}]: " "$DEFAULT_TARGET_DIR")"
+if [[ "$IN_PLACE" -eq 1 ]]; then
+  TARGET_DIR="."
+else
+  DEFAULT_TARGET_DIR="../$PROJECT_NAME"
+  TARGET_DIR="$(require_value "$TARGET_DIR" "Diretório de destino [${DEFAULT_TARGET_DIR}]: " "$DEFAULT_TARGET_DIR")"
 
-if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
-  fail "O diretório '$TARGET_DIR' já existe e não está vazio."
-  exit 1
+  if [[ -e "$TARGET_DIR" && -n "$(find "$TARGET_DIR" -mindepth 1 -maxdepth 1 2>/dev/null)" ]]; then
+    fail "O diretório '$TARGET_DIR' já existe e não está vazio."
+    exit 1
+  fi
 fi
 
 DEFAULT_DESCRIPTION="Aplicação derivada de $PROJECT_NAME baseada no template AppStart."
@@ -237,28 +247,36 @@ if [[ "$SKIP_INSTALL" -eq 1 && "$BOOTSTRAP" -eq 1 ]]; then
   exit 1
 fi
 
-info "Criando projeto em '${TARGET_DIR}'..."
-mkdir -p "$TARGET_DIR"
+if [[ "$IN_PLACE" -eq 0 ]]; then
+  info "Criando projeto em '${TARGET_DIR}'..."
+  mkdir -p "$TARGET_DIR"
 
-tar -cf - \
-  --exclude='./.git' \
-  --exclude='./node_modules' \
-  --exclude='*/dist/' \
-  --exclude='./.env' \
-  --exclude='./.turbo' \
-  --exclude='./coverage' \
-  --exclude='./repos' \
-  --exclude='./.agent' \
-  --exclude='./.pi' \
-  --exclude='./openspec/changes' \
-  --exclude='./openspec/specs' \
-  --exclude='./setup.sh' \
-  --exclude='./SRD.md' \
-  . | (cd "$TARGET_DIR" && tar -xf -)
-
+  tar -cf - \
+    --exclude='./.git' \
+    --exclude='./node_modules' \
+    --exclude='*/dist/' \
+    --exclude='./.env' \
+    --exclude='./.turbo' \
+    --exclude='./coverage' \
+    --exclude='./repos' \
+    --exclude='./.agent' \
+    --exclude='./.pi' \
+    --exclude='./openspec/changes' \
+    --exclude='./openspec/specs' \
+    --exclude='./setup.sh' \
+    --exclude='./SRD.md' \
+    . | (cd "$TARGET_DIR" && tar -xf -)
+  ok "Template copiado sem alterar a base original"
+else
+  info "Configurando projeto in-place..."
+fi
 mkdir -p "$TARGET_DIR/openspec/changes/archive" "$TARGET_DIR/openspec/specs"
 cp "$TARGET_DIR/.env.example" "$TARGET_DIR/.env"
-ok "Template copiado sem alterar a base original"
+if [[ "$IN_PLACE" -eq 0 ]]; then
+  ok "Arquivos base preparados no novo diretório"
+else
+  ok "Arquivos base preparados no diretório atual"
+fi
 
 info "Aplicando configuração inicial do projeto..."
 node - "$TARGET_DIR" "$PROJECT_NAME" "$PROJECT_DESCRIPTION" "$DB_NAME" "$API_PORT" "$WEB_PORT" "$DB_PORT" "$KEYCLOAK_PORT" "$ADMIN_EMAIL" "$ADMIN_NAME" <<'NODE'
@@ -374,17 +392,27 @@ NODE
 ok "Configuração inicial aplicada"
 
 if [[ "$SKIP_GIT" -eq 0 ]]; then
-  info "Inicializando repositório Git..."
-  (
-    cd "$TARGET_DIR"
-    git init >/dev/null 2>&1
-    if [[ -n "$GIT_REMOTE_URL" ]]; then
-      git remote add origin "$GIT_REMOTE_URL"
-    fi
-  )
-  ok "Repositório Git inicializado"
+  if [[ "$IN_PLACE" -eq 0 ]]; then
+    info "Inicializando repositório Git..."
+    (
+      cd "$TARGET_DIR"
+      git init >/dev/null 2>&1
+      if [[ -n "$GIT_REMOTE_URL" ]]; then
+        git remote add origin "$GIT_REMOTE_URL"
+      fi
+    )
+    ok "Repositório Git inicializado"
+  else
+    info "Registrando alterações no Git..."
+    (
+      cd "$TARGET_DIR"
+      git add . >/dev/null 2>&1 || true
+      git commit -m "chore: scaffold in-place executado" >/dev/null 2>&1 || true
+    )
+    ok "Alterações do scaffold registradas"
+  fi
 else
-  warn "git init ignorado por --skip-git"
+  warn "Etapa do Git ignorada por --skip-git"
 fi
 
 if [[ "$SKIP_INSTALL" -eq 0 ]]; then
@@ -410,11 +438,21 @@ fi
 
 PROJECT_PATH="$(cd "$TARGET_DIR" && pwd)"
 echo ""
-ok "Projeto '${PROJECT_NAME}' criado com sucesso!"
+if [[ "$IN_PLACE" -eq 0 ]]; then
+  ok "Projeto '${PROJECT_NAME}' criado com sucesso!"
+else
+  ok "Projeto '${PROJECT_NAME}' configurado com sucesso!"
+  # Clean up setup script in-place
+  rm -- "$0"
+fi
 echo ""
 info "Próximos passos:"
 echo ""
-echo "    cd ${PROJECT_PATH}"
+
+if [[ "$IN_PLACE" -eq 0 ]]; then
+  echo "    cd ${PROJECT_PATH}"
+fi
+
 if [[ "$SKIP_INSTALL" -eq 1 ]]; then
   echo "    corepack enable"
   echo "    pnpm install"
@@ -424,7 +462,10 @@ if [[ "$BOOTSTRAP" -eq 0 ]]; then
 fi
 echo "    pnpm dev"
 echo ""
-if [[ -n "$GIT_REMOTE_URL" ]]; then
-  info "Remote Git configurado: ${GIT_REMOTE_URL}"
+
+if [[ "$IN_PLACE" -eq 0 ]]; then
+  if [[ -n "$GIT_REMOTE_URL" ]]; then
+    info "Remote Git configurado: ${GIT_REMOTE_URL}"
+  fi
+  bold "  Template original preservado em: ${ROOT_DIR}"
 fi
-bold "  Template original preservado em: ${ROOT_DIR}"
