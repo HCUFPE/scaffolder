@@ -5,6 +5,7 @@
  * API REST do AppStart - Especificação OpenAPI 3.0
  * OpenAPI spec version: 1.0.0
  */
+import type { TasksControllerFindAllCategory } from './tasksControllerFindAllCategory';
 import type { TasksControllerFindAllPriority } from './tasksControllerFindAllPriority';
 import type { TasksControllerFindAllSortBy } from './tasksControllerFindAllSortBy';
 import type { TasksControllerFindAllSortOrder } from './tasksControllerFindAllSortOrder';
@@ -35,6 +36,10 @@ status?: TasksControllerFindAllStatus;
  * Filtro por prioridade
  */
 priority?: TasksControllerFindAllPriority;
+/**
+ * Filtro por categoria
+ */
+category?: TasksControllerFindAllCategory;
 /**
  * Campo de ordenação
  */

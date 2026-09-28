@@ -26,6 +26,14 @@ enum TaskPriority {
   URGENT
 }
 
+enum TaskCategory {
+  PERSONAL
+  WORK
+  STUDY
+  HEALTH
+  OTHER
+}
+
 model UserProfile {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   keycloakUserId String    @unique
@@ -62,6 +70,7 @@ model Task {
   description String?
   status      TaskStatus   @default(PENDING)
   priority    TaskPriority @default(MEDIUM)
+  category    TaskCategory @default(OTHER)
   dueDate     DateTime?
   ownerId     String       @db.Uuid
   deletedAt   DateTime?
@@ -72,5 +81,6 @@ model Task {
   @@index([ownerId])
   @@index([deletedAt])
   @@index([status])
+  @@index([category])
   @@map("tasks")
 }
