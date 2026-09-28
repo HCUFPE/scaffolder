@@ -1,8 +1,8 @@
 {
-  "name": "appstart",
+  "name": "vivian-projeto",
   "private": true,
   "version": "0.1.0",
-  "description": "Template AppStart com setup local e scaffolding guiado para projetos derivados.",
+  "description": "Adicionar defuncionalidade nova",
   "packageManager": "pnpm@9.12.3",
   "engines": {
     "node": ">=24",
@@ -10,7 +10,6 @@
   },
   "scripts": {
     "postinstall": "pnpm --dir apps/api run prisma:generate",
-    "scaffold": "bash ./setup.sh",
     "check:runtime": "node scripts/check-runtime.mjs",
     "check:env": "node scripts/check-env.mjs",
     "setup": "node scripts/setup.mjs",

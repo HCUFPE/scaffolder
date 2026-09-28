@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    container_name: appstart-postgres
+    container_name: vivian-projeto-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -23,7 +23,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
-    container_name: appstart-keycloak
+    container_name: vivian-projeto-keycloak
     network_mode: "service:postgres"
     restart: unless-stopped
     command:

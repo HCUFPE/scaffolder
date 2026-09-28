@@ -87,7 +87,7 @@ export function LoginPage() {
             AS
           </div>
           <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-            AppStart
+            Vivian Projeto
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Plataforma Full Stack com Autenticação Centralizada
