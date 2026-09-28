@@ -44,6 +44,7 @@ const taskFormSchema = z.object({
     .max(150, 'O título deve ter no máximo 150 caracteres.'),
   description: z.string().max(1000, 'Máximo de 1000 caracteres.').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  category: z.enum(['WORK', 'PERSONAL', 'STUDY', 'HEALTH', 'OTHER']),
   dueDate: z.string().optional(),
 });
 
@@ -55,6 +56,14 @@ const editTaskFormSchema = taskFormSchema.extend({
 
 type EditTaskFormValues = z.infer<typeof editTaskFormSchema>;
 
+const CATEGORY_OPTIONS = [
+  { value: 'WORK', label: 'Trabalho' },
+  { value: 'PERSONAL', label: 'Pessoal' },
+  { value: 'STUDY', label: 'Estudos' },
+  { value: 'HEALTH', label: 'Saúde' },
+  { value: 'OTHER', label: 'Outros' },
+] as const;
+
 export function TasksPage() {
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
@@ -64,6 +73,7 @@ export function TasksPage() {
   const search = searchParams.get('search') || '';
   const statusFilter = searchParams.get('status') || '';
   const priorityFilter = searchParams.get('priority') || '';
+  const categoryFilter = searchParams.get('category') || '';
   const sortBy = searchParams.get('sortBy') || 'createdAt';
   const sortOrder = (searchParams.get('sortOrder') as 'asc' | 'desc') || 'desc';
 
@@ -86,7 +96,7 @@ export function TasksPage() {
 
   // Fetch Tasks with TanStack Query
   const { data: response, isLoading, isError, refetch } = useQuery({
-    queryKey: ['tasks', { page, search, statusFilter, priorityFilter, sortBy, sortOrder }],
+    queryKey: ['tasks', { page, search, statusFilter, priorityFilter, categoryFilter, sortBy, sortOrder }],
     queryFn: async () => {
       const res = await tasksControllerFindAll({
         page,
@@ -94,6 +104,7 @@ export function TasksPage() {
         ...(search ? { search } : {}),
         ...(statusFilter ? { status: statusFilter as any } : {}),
         ...(priorityFilter ? { priority: priorityFilter as any } : {}),
+        ...(categoryFilter ? { category: categoryFilter as any } : {}),
         sortBy: sortBy as any,
         sortOrder,
       });
@@ -120,6 +131,7 @@ export function TasksPage() {
       title: '',
       description: '',
       priority: 'MEDIUM',
+      category: 'OTHER',
       dueDate: '',
     },
   });
@@ -130,6 +142,7 @@ export function TasksPage() {
         title: data.title,
         description: data.description || undefined,
         priority: data.priority as any,
+        category: data.category as any,
         dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       });
       return res.data;
@@ -164,6 +177,7 @@ export function TasksPage() {
         title?: string;
         description?: string;
         priority?: TaskDtoPriority;
+        category?: string;
         status?: TaskDtoStatus;
         dueDate?: string;
       };
@@ -217,6 +231,11 @@ export function TasksPage() {
     }
   };
 
+  const getCategoryBadge = (category?: string) => {
+    const label = CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? 'Outros';
+    return <Badge variant="outline">{label}</Badge>;
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'COMPLETED':
@@ -262,7 +281,7 @@ export function TasksPage() {
       {/* Filter and Search Controls */}
       <Card>
         <CardContent className="p-4 space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -301,6 +320,20 @@ export function TasksPage() {
               <option value="URGENT">Urgente</option>
             </select>
 
+            {/* Category Filter */}
+            <select
+              value={categoryFilter}
+              onChange={(e) => updateParams({ category: e.target.value || undefined, page: 1 })}
+              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            >
+              <option value="">Todas as Categorias</option>
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+
             {/* Sorting */}
             <select
               value={`${sortBy}:${sortOrder}`}
@@ -332,12 +365,12 @@ export function TasksPage() {
         <EmptyState
           title="Nenhuma tarefa encontrada"
           description={
-            search || statusFilter || priorityFilter
+            search || statusFilter || priorityFilter || categoryFilter
               ? 'Nenhum registro corresponde aos filtros selecionados.'
               : 'Você ainda não possui tarefas criadas.'
           }
           action={
-            search || statusFilter || priorityFilter ? (
+            search || statusFilter || priorityFilter || categoryFilter ? (
               <Button
                 variant="outline"
                 size="sm"
@@ -371,6 +404,7 @@ export function TasksPage() {
                           {task.title}
                         </h3>
                         <div className="flex items-center gap-1.5 shrink-0">
+                          {getCategoryBadge(task.category)}
                           {getPriorityBadge(task.priority)}
                           {getStatusBadge(task.status)}
                         </div>
@@ -571,6 +605,22 @@ export function TasksPage() {
                 />
               </div>
 
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Categoria
+                </label>
+                <select
+                  {...registerCreate('category')}
+                  className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                >
+                  {CATEGORY_OPTIONS.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <Button
                   type="button"
@@ -630,6 +680,7 @@ function EditTaskModal({
       title: task.title,
       description: rawDesc,
       priority: task.priority as any,
+      category: (task.category ?? 'OTHER') as any,
       status: task.status as any,
       dueDate: rawDue,
     },
@@ -667,6 +718,7 @@ function EditTaskModal({
               title: data.title,
               description: data.description || undefined,
               priority: data.priority,
+              category: data.category,
               status: data.status,
               dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
             });
@@ -732,6 +784,23 @@ function EditTaskModal({
             {...register('dueDate')}
             error={errors.dueDate?.message}
           />
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Categoria
+            </label>
+            <select
+              disabled={isCompleted}
+              {...register('category')}
+              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
