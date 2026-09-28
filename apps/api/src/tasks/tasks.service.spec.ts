@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service';
-import { TaskPriorityEnum, TaskStatusEnum } from './task.dto';
+import { TaskCategoryEnum, TaskPriorityEnum, TaskStatusEnum } from './task.dto';
 import { TasksService } from './tasks.service';
 
 describe('TasksService', () => {
@@ -29,6 +29,7 @@ describe('TasksService', () => {
     description: 'Aprender sobre sessões opacas e Keycloak',
     status: TaskStatusEnum.PENDING,
     priority: TaskPriorityEnum.HIGH,
+    category: TaskCategoryEnum.STUDY,
     dueDate: new Date(Date.now() + 86400000),
     ownerId: 'user-uuid-1',
     deletedAt: null,
@@ -70,6 +71,22 @@ describe('TasksService', () => {
       expect(prisma.task.create).toHaveBeenCalled();
     });
 
+    it('saves the given category', async () => {
+      prisma.task.create.mockResolvedValue(mockTask);
+
+      const result = await service.create(mockUser.id, {
+        title: 'Estudar Arquitetura BFF',
+        category: TaskCategoryEnum.STUDY,
+      });
+
+      expect(result.category).toBe(TaskCategoryEnum.STUDY);
+      expect(prisma.task.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ category: TaskCategoryEnum.STUDY }),
+        }),
+      );
+    });
+
     it('rejects due date set in the past', async () => {
       const pastDate = new Date(Date.now() - 3600000).toISOString();
 
@@ -83,6 +100,19 @@ describe('TasksService', () => {
   });
 
   describe('findAll', () => {
+    it('filters by category when provided', async () => {
+      prisma.task.count.mockResolvedValue(1);
+      prisma.task.findMany.mockResolvedValue([mockTask]);
+
+      await service.findAll(mockUser, { page: 1, pageSize: 10, category: TaskCategoryEnum.STUDY });
+
+      expect(prisma.task.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ category: TaskCategoryEnum.STUDY }),
+        }),
+      );
+    });
+
     it('restricts query to own tasks for regular users', async () => {
       prisma.task.count.mockResolvedValue(1);
       prisma.task.findMany.mockResolvedValue([mockTask]);
