@@ -33,6 +33,7 @@ import {
 import type {
   PaginatedTasksResponseDto,
   TaskDto,
+  TaskDtoCategory,
   TaskDtoPriority,
   TaskDtoStatus,
 } from '../lib/api-client/models';
@@ -44,6 +45,7 @@ const taskFormSchema = z.object({
     .max(150, 'O título deve ter no máximo 150 caracteres.'),
   description: z.string().max(1000, 'Máximo de 1000 caracteres.').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  category: z.enum(['WORK', 'PERSONAL', 'STUDY', 'HEALTH', 'OTHER']),
   dueDate: z.string().optional(),
 });
 
@@ -54,6 +56,17 @@ const editTaskFormSchema = taskFormSchema.extend({
 });
 
 type EditTaskFormValues = z.infer<typeof editTaskFormSchema>;
+
+const CATEGORY_OPTIONS = [
+  { value: 'WORK', label: 'Trabalho' },
+  { value: 'PERSONAL', label: 'Pessoal' },
+  { value: 'STUDY', label: 'Estudos' },
+  { value: 'HEALTH', label: 'Saúde' },
+  { value: 'OTHER', label: 'Outros' },
+] as const;
+
+const getCategoryLabel = (category: string) =>
+  CATEGORY_OPTIONS.find((c) => c.value === category)?.label ?? 'Outros';
 
 export function TasksPage() {
   const { isAdmin } = useAuth();
@@ -120,6 +133,7 @@ export function TasksPage() {
       title: '',
       description: '',
       priority: 'MEDIUM',
+      category: 'OTHER',
       dueDate: '',
     },
   });
@@ -130,6 +144,7 @@ export function TasksPage() {
         title: data.title,
         description: data.description || undefined,
         priority: data.priority as any,
+        category: data.category as any,
         dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       });
       return res.data;
@@ -164,6 +179,7 @@ export function TasksPage() {
         title?: string;
         description?: string;
         priority?: TaskDtoPriority;
+        category?: TaskDtoCategory;
         status?: TaskDtoStatus;
         dueDate?: string;
       };
@@ -370,7 +386,8 @@ export function TasksPage() {
                         <h3 className="font-semibold text-base text-slate-900 dark:text-white line-clamp-1">
                           {task.title}
                         </h3>
-                        <div className="flex items-center gap-1.5 shrink-0">
+                        <div className="flex flex-wrap items-center justify-end gap-1.5 shrink-0">
+                          <Badge variant="outline">{getCategoryLabel(task.category)}</Badge>
                           {getPriorityBadge(task.priority)}
                           {getStatusBadge(task.status)}
                         </div>
@@ -547,6 +564,22 @@ export function TasksPage() {
                 )}
               </div>
 
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Categoria
+                </label>
+                <select
+                  {...registerCreate('category')}
+                  className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                >
+                  {CATEGORY_OPTIONS.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -630,6 +663,7 @@ function EditTaskModal({
       title: task.title,
       description: rawDesc,
       priority: task.priority as any,
+      category: task.category as any,
       status: task.status as any,
       dueDate: rawDue,
     },
@@ -667,6 +701,7 @@ function EditTaskModal({
               title: data.title,
               description: data.description || undefined,
               priority: data.priority,
+              category: data.category,
               status: data.status,
               dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
             });
@@ -690,6 +725,23 @@ function EditTaskModal({
               {...register('description')}
               className="flex w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Categoria
+            </label>
+            <select
+              disabled={isCompleted}
+              {...register('category')}
+              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
