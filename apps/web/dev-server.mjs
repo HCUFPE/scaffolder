@@ -8,7 +8,7 @@ const html = `<!doctype html>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AppStart</title>
+    <title>Vivian Projeto</title>
     <style>
       body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; background: #0f172a; color: #e2e8f0; }
       main { max-width: 48rem; margin: 0 auto; }
@@ -18,7 +18,7 @@ const html = `<!doctype html>
   </head>
   <body>
     <main>
-      <h1>AppStart</h1>
+      <h1>Vivian Projeto</h1>
       <p>Frontend de desenvolvimento ativo.</p>
       <p>API esperada em <code>http://localhost:${apiPort}/api/v1</code>.</p>
     </main>

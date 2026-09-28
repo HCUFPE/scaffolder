@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service';
-import { TaskPriorityEnum, TaskStatusEnum } from './task.dto';
+import { TaskCategoryEnum, TaskPriorityEnum, TaskStatusEnum } from './task.dto';
 import { TasksService } from './tasks.service';
 
 describe('TasksService', () => {
@@ -29,6 +29,7 @@ describe('TasksService', () => {
     description: 'Aprender sobre sessões opacas e Keycloak',
     status: TaskStatusEnum.PENDING,
     priority: TaskPriorityEnum.HIGH,
+    category: TaskCategoryEnum.STUDY,
     dueDate: new Date(Date.now() + 86400000),
     ownerId: 'user-uuid-1',
     deletedAt: null,
@@ -68,6 +69,34 @@ describe('TasksService', () => {
       expect(result.id).toBe(mockTask.id);
       expect(result.ownerId).toBe(mockUser.id);
       expect(prisma.task.create).toHaveBeenCalled();
+    });
+
+    it('saves the provided category', async () => {
+      prisma.task.create.mockResolvedValue(mockTask);
+
+      const result = await service.create(mockUser.id, {
+        title: 'Estudar Arquitetura BFF',
+        category: TaskCategoryEnum.STUDY,
+      });
+
+      expect(result.category).toBe(TaskCategoryEnum.STUDY);
+      expect(prisma.task.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ category: TaskCategoryEnum.STUDY }),
+        }),
+      );
+    });
+
+    it('defaults category to OTHER when not provided', async () => {
+      prisma.task.create.mockResolvedValue({ ...mockTask, category: TaskCategoryEnum.OTHER });
+
+      await service.create(mockUser.id, { title: 'Tarefa sem categoria' });
+
+      expect(prisma.task.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ category: TaskCategoryEnum.OTHER }),
+        }),
+      );
     });
 
     it('rejects due date set in the past', async () => {
@@ -115,6 +144,25 @@ describe('TasksService', () => {
         }),
       );
       expect(prisma.task.findMany.mock.calls[0][0].where.ownerId).toBeUndefined();
+    });
+  });
+
+  describe('findAll category filter', () => {
+    it('filters tasks by category', async () => {
+      prisma.task.count.mockResolvedValue(1);
+      prisma.task.findMany.mockResolvedValue([mockTask]);
+
+      await service.findAll(mockUser, {
+        page: 1,
+        pageSize: 10,
+        category: TaskCategoryEnum.STUDY,
+      });
+
+      expect(prisma.task.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ category: TaskCategoryEnum.STUDY }),
+        }),
+      );
     });
   });
 

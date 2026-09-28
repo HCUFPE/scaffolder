@@ -1,5 +1,5 @@
 {
-  "name": "@appstart/api",
+  "name": "@vivian-projeto/api",
   "private": true,
   "scripts": {
     "build": "nest build",
