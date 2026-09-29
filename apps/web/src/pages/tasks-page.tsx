@@ -33,6 +33,7 @@ import {
 import type {
   PaginatedTasksResponseDto,
   TaskDto,
+  TaskDtoCategory,
   TaskDtoPriority,
   TaskDtoStatus,
 } from '../lib/api-client/models';
@@ -44,6 +45,7 @@ const taskFormSchema = z.object({
     .max(150, 'O título deve ter no máximo 150 caracteres.'),
   description: z.string().max(1000, 'Máximo de 1000 caracteres.').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  category: z.enum(['WORK', 'STUDY', 'PERSONAL', 'OTHER']),
   dueDate: z.string().optional(),
 });
 
@@ -54,6 +56,13 @@ const editTaskFormSchema = taskFormSchema.extend({
 });
 
 type EditTaskFormValues = z.infer<typeof editTaskFormSchema>;
+
+const categoryLabels: Record<string, string> = {
+  WORK: 'Trabalho',
+  STUDY: 'Estudos',
+  PERSONAL: 'Pessoal',
+  OTHER: 'Outros',
+};
 
 export function TasksPage() {
   const { isAdmin } = useAuth();
@@ -120,6 +129,7 @@ export function TasksPage() {
       title: '',
       description: '',
       priority: 'MEDIUM',
+      category: 'OTHER',
       dueDate: '',
     },
   });
@@ -130,6 +140,7 @@ export function TasksPage() {
         title: data.title,
         description: data.description || undefined,
         priority: data.priority as any,
+        category: data.category as any,
         dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       });
       return res.data;
@@ -164,6 +175,7 @@ export function TasksPage() {
         title?: string;
         description?: string;
         priority?: TaskDtoPriority;
+        category?: TaskDtoCategory;
         status?: TaskDtoStatus;
         dueDate?: string;
       };
@@ -385,6 +397,9 @@ export function TasksPage() {
 
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
                       <div className="flex items-center gap-3">
+                         <Badge variant="secondary">
+                          {categoryLabels[task.category] ?? task.category}
+                        </Badge>
                         {dueStr && (
                           <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
                             <Calendar className="h-3.5 w-3.5" />
@@ -569,6 +584,20 @@ export function TasksPage() {
                   {...registerCreate('dueDate')}
                   error={createErrors.dueDate?.message}
                 />
+                                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Categoria
+                  </label>
+                  <select
+                    {...registerCreate('category')}
+                    className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  >
+                    <option value="WORK">Trabalho</option>
+                    <option value="STUDY">Estudos</option>
+                    <option value="PERSONAL">Pessoal</option>
+                    <option value="OTHER">Outros</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
@@ -630,6 +659,7 @@ function EditTaskModal({
       title: task.title,
       description: rawDesc,
       priority: task.priority as any,
+      category: task.category as any,
       status: task.status as any,
       dueDate: rawDue,
     },
@@ -667,6 +697,7 @@ function EditTaskModal({
               title: data.title,
               description: data.description || undefined,
               priority: data.priority,
+              category: data.category,
               status: data.status,
               dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
             });
@@ -732,6 +763,21 @@ function EditTaskModal({
             {...register('dueDate')}
             error={errors.dueDate?.message}
           />
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Categoria
+            </label>
+            <select
+              disabled={isCompleted}
+              {...register('category')}
+              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="WORK">Trabalho</option>
+              <option value="STUDY">Estudos</option>
+              <option value="PERSONAL">Pessoal</option>
+              <option value="OTHER">Outros</option>
+            </select>
+          </div>
 
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
