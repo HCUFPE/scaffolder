@@ -20,8 +20,18 @@ try {
   await checkPortAvailable(Number(env.API_PORT), 'API');
   await checkPortAvailable(Number(env.WEB_PORT), 'frontend');
 
-  const api = spawn('pnpm', ['run', 'api:dev'], { stdio: 'inherit', env: process.env });
-  const web = spawn('pnpm', ['run', 'web:dev'], { stdio: 'inherit', env: process.env });
+  const startPnpmScript = (scriptName) => {
+    const args = ['run', scriptName];
+    const options = { stdio: 'inherit', env: process.env };
+    if (process.platform === 'win32') {
+      // On Windows pnpm is a .cmd shim; start its fixed project command via cmd.exe.
+      return spawn(`pnpm ${args.join(' ')}`, { ...options, shell: true });
+    }
+    return spawn('pnpm', args, options);
+  };
+
+  const api = startPnpmScript('api:dev');
+  const web = startPnpmScript('web:dev');
   children.push(api, web);
 
   for (const child of children) {

@@ -1504,6 +1504,12 @@
             "example": "Definir alertas para uso de CPU e memória.",
             "maxLength": 1000
           },
+          "category": {
+            "type": "string",
+            "description": "Categoria da tarefa",
+            "example": "Estudos",
+            "maxLength": 100
+          },
           "priority": {
             "type": "string",
             "description": "Prioridade da tarefa",
@@ -1567,6 +1573,12 @@
             "type": "object",
             "description": "Descrição da tarefa",
             "nullable": true
+          },
+          "category": {
+            "type": "object",
+            "description": "Categoria da tarefa",
+            "nullable": true,
+            "example": "Estudos"
           },
           "status": {
             "type": "string",
@@ -1665,6 +1677,12 @@
             "type": "string",
             "description": "Descrição detalhada da tarefa",
             "maxLength": 1000
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria da tarefa",
+            "example": "Estudos",
+            "maxLength": 100
           },
           "status": {
             "type": "string",

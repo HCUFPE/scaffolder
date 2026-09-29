@@ -19,6 +19,11 @@ export interface CreateTaskDto {
      * @maxLength 1000
      */
   description?: string;
+  /**
+     * Categoria da tarefa
+     * @maxLength 100
+     */
+  category?: string;
   /** Prioridade da tarefa */
   priority?: CreateTaskDtoPriority;
   /** Data de entrega limite (ISO 8601) */

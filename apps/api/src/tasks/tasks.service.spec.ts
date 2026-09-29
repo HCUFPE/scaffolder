@@ -27,6 +27,7 @@ describe('TasksService', () => {
     id: 'task-uuid-1',
     title: 'Estudar Arquitetura BFF',
     description: 'Aprender sobre sessões opacas e Keycloak',
+    category: null,
     status: TaskStatusEnum.PENDING,
     priority: TaskPriorityEnum.HIGH,
     dueDate: new Date(Date.now() + 86400000),
@@ -68,6 +69,27 @@ describe('TasksService', () => {
       expect(result.id).toBe(mockTask.id);
       expect(result.ownerId).toBe(mockUser.id);
       expect(prisma.task.create).toHaveBeenCalled();
+    });
+
+    it('saves and returns task category', async () => {
+      prisma.task.create.mockResolvedValue({
+        ...mockTask,
+        category: 'Estudos',
+      });
+
+      const result = await service.create(mockUser.id, {
+        title: 'Estudar Arquitetura BFF',
+        category: '  Estudos  ',
+      });
+
+      expect(prisma.task.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            category: 'Estudos',
+          }),
+        }),
+      );
+      expect(result.category).toBe('Estudos');
     });
 
     it('rejects due date set in the past', async () => {
@@ -163,6 +185,30 @@ describe('TasksService', () => {
       });
 
       expect(result.title).toBe('Título Atualizado');
+    });
+
+    it('updates and returns a trimmed category', async () => {
+      prisma.task.findFirst.mockResolvedValue(mockTask);
+      prisma.task.update.mockResolvedValue({ ...mockTask, category: 'Estudos' });
+
+      const result = await service.update(mockUser, mockTask.id, { category: '  Estudos  ' });
+
+      expect(prisma.task.update).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ category: 'Estudos' }) }),
+      );
+      expect(result.category).toBe('Estudos');
+    });
+
+    it('clears the category when updated with an empty value', async () => {
+      prisma.task.findFirst.mockResolvedValue({ ...mockTask, category: 'Estudos' });
+      prisma.task.update.mockResolvedValue({ ...mockTask, category: null });
+
+      const result = await service.update(mockUser, mockTask.id, { category: '' });
+
+      expect(prisma.task.update).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ category: null }) }),
+      );
+      expect(result.category).toBeNull();
     });
 
     it('rejects editing field details of a COMPLETED task without reopening it first', async () => {

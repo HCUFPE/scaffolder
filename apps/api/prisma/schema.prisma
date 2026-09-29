@@ -60,6 +60,7 @@ model Task {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
   description String?
+  category    String?
   status      TaskStatus   @default(PENDING)
   priority    TaskPriority @default(MEDIUM)
   dueDate     DateTime?

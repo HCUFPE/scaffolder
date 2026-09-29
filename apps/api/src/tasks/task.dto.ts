@@ -38,6 +38,12 @@ export class CreateTaskDto {
   @MaxLength(1000, { message: 'A descrição deve ter no máximo 1000 caracteres.' })
   description?: string;
 
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', example: 'Estudos', maxLength: 100 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100, { message: 'A categoria deve ter no máximo 100 caracteres.' })
+  category?: string;
+
   @ApiPropertyOptional({ description: 'Prioridade da tarefa', enum: TaskPriorityEnum, default: TaskPriorityEnum.MEDIUM })
   @IsOptional()
   @IsEnum(TaskPriorityEnum, { message: 'Prioridade inválida.' })
@@ -62,6 +68,12 @@ export class UpdateTaskDto {
   @IsString()
   @MaxLength(1000, { message: 'A descrição deve ter no máximo 1000 caracteres.' })
   description?: string;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', example: 'Estudos', maxLength: 100 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(100, { message: 'A categoria deve ter no máximo 100 caracteres.' })
+  category?: string;
 
   @ApiPropertyOptional({ description: 'Status atual da tarefa', enum: TaskStatusEnum })
   @IsOptional()
@@ -99,6 +111,9 @@ export class TaskDto {
 
   @ApiPropertyOptional({ description: 'Descrição da tarefa', nullable: true })
   description!: string | null;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', nullable: true, example: 'Estudos' })
+  category!: string | null;
 
   @ApiProperty({ description: 'Status da tarefa', enum: TaskStatusEnum, example: TaskStatusEnum.PENDING })
   status!: TaskStatusEnum;
