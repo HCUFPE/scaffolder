@@ -5,6 +5,7 @@
  * API REST do AppStart - Especificação OpenAPI 3.0
  * OpenAPI spec version: 1.0.0
  */
+import type { CreateTaskDtoCategory } from './createTaskDtoCategory';
 import type { CreateTaskDtoPriority } from './createTaskDtoPriority';
 
 export interface CreateTaskDto {
@@ -21,6 +22,8 @@ export interface CreateTaskDto {
   description?: string;
   /** Prioridade da tarefa */
   priority?: CreateTaskDtoPriority;
+  /** Categoria da tarefa */
+  category?: CreateTaskDtoCategory;
   /** Data de entrega limite (ISO 8601) */
   dueDate?: string;
 }
