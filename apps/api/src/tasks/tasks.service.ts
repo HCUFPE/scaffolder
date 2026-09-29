@@ -9,6 +9,7 @@ import {
   CreateTaskDto,
   ListTasksQueryDto,
   PaginatedTasksResponseDto,
+  TaskCategory,
   TaskDto,
   TaskPriorityEnum,
   TaskStatusEnum,
@@ -40,6 +41,7 @@ export class TasksService {
         title: dto.title.trim(),
         description: dto.description?.trim() || null,
         priority: (dto.priority as TaskPriorityEnum) || TaskPriorityEnum.MEDIUM,
+        category: dto.category ?? 'OTHER', // NOVO
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         ownerId,
       },
@@ -174,6 +176,7 @@ export class TasksService {
       (dto.title !== undefined && dto.title !== existing.title) ||
       (dto.description !== undefined && dto.description !== existing.description) ||
       (dto.priority !== undefined && dto.priority !== existing.priority) ||
+      (dto.category !== undefined && dto.category !== existing.category) || // NOVO
       (dto.dueDate !== undefined);
 
     if (isAlreadyCompleted && !isReopening && hasFieldChanges) {
@@ -199,6 +202,7 @@ export class TasksService {
         ...(dto.description !== undefined ? { description: dto.description.trim() || null } : {}),
         ...(dto.status !== undefined ? { status: dto.status as TaskStatusEnum } : {}),
         ...(dto.priority !== undefined ? { priority: dto.priority as TaskPriorityEnum } : {}),
+        ...(dto.category !== undefined ? { category: dto.category } : {}), // NOVO
         ...(dto.dueDate !== undefined ? { dueDate: dto.dueDate ? new Date(dto.dueDate) : null } : {}),
       },
       include: {
@@ -247,6 +251,7 @@ export class TasksService {
       description: task.description,
       status: task.status as TaskStatusEnum,
       priority: task.priority as TaskPriorityEnum,
+      category: task.category as TaskCategory, // NOVO
       dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,
       ownerId: task.ownerId,
       owner: task.owner

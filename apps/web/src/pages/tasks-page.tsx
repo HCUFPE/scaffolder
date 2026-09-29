@@ -37,6 +37,13 @@ import type {
   TaskDtoStatus,
 } from '../lib/api-client/models';
 
+const CATEGORY_LABELS: Record<string, string> = {
+  WORK: 'Trabalho',
+  STUDY: 'Estudos',
+  PERSONAL: 'Pessoal',
+  OTHER: 'Outros',
+};
+
 const taskFormSchema = z.object({
   title: z
     .string()
@@ -44,6 +51,7 @@ const taskFormSchema = z.object({
     .max(150, 'O título deve ter no máximo 150 caracteres.'),
   description: z.string().max(1000, 'Máximo de 1000 caracteres.').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  category: z.enum(['WORK', 'STUDY', 'PERSONAL', 'OTHER']),
   dueDate: z.string().optional(),
 });
 
@@ -120,6 +128,7 @@ export function TasksPage() {
       title: '',
       description: '',
       priority: 'MEDIUM',
+      category: 'OTHER',
       dueDate: '',
     },
   });
@@ -130,6 +139,7 @@ export function TasksPage() {
         title: data.title,
         description: data.description || undefined,
         priority: data.priority as any,
+        category: data.category as any,
         dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       });
       return res.data;
@@ -164,6 +174,7 @@ export function TasksPage() {
         title?: string;
         description?: string;
         priority?: TaskDtoPriority;
+        category?: string;
         status?: TaskDtoStatus;
         dueDate?: string;
       };
@@ -371,6 +382,9 @@ export function TasksPage() {
                           {task.title}
                         </h3>
                         <div className="flex items-center gap-1.5 shrink-0">
+                                                  <Badge variant="outline">
+                            {CATEGORY_LABELS[(task as any).category] ?? 'Outros'}
+                          </Badge>
                           {getPriorityBadge(task.priority)}
                           {getStatusBadge(task.status)}
                         </div>
@@ -546,7 +560,20 @@ export function TasksPage() {
                   <span className="text-xs text-red-500">{createErrors.description.message}</span>
                 )}
               </div>
-
+                              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Categoria
+                </label>
+                <select
+                  {...registerCreate('category')}
+                  className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                >
+                  <option value="WORK">Trabalho</option>
+                  <option value="STUDY">Estudos</option>
+                  <option value="PERSONAL">Pessoal</option>
+                  <option value="OTHER">Outros</option>
+                </select>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -630,6 +657,7 @@ function EditTaskModal({
       title: task.title,
       description: rawDesc,
       priority: task.priority as any,
+      category: ((task as any).category ?? 'OTHER') as any,      
       status: task.status as any,
       dueDate: rawDue,
     },
@@ -667,6 +695,7 @@ function EditTaskModal({
               title: data.title,
               description: data.description || undefined,
               priority: data.priority,
+              category: data.category,
               status: data.status,
               dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
             });
@@ -724,7 +753,21 @@ function EditTaskModal({
               </select>
             </div>
           </div>
-
+          <div className="flex flex-col gap-1.5">
+            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Categoria
+            </label>
+            <select
+              disabled={isCompleted}
+              {...register('category')}
+              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option value="WORK">Trabalho</option>
+              <option value="STUDY">Estudos</option>
+              <option value="PERSONAL">Pessoal</option>
+              <option value="OTHER">Outros</option>
+            </select>
+          </div>
           <Input
             label="Data Limite"
             type="date"

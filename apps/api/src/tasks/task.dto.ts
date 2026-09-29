@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -9,6 +10,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { PaginationMetaDto, PaginationQueryDto } from '../common/dto/pagination.dto';
+
+export const TASK_CATEGORIES = ['WORK', 'STUDY', 'PERSONAL', 'OTHER'] as const;
+export type TaskCategory = (typeof TASK_CATEGORIES)[number];
 
 export enum TaskStatusEnum {
   PENDING = 'PENDING',
@@ -43,6 +47,11 @@ export class CreateTaskDto {
   @IsEnum(TaskPriorityEnum, { message: 'Prioridade inválida.' })
   priority?: TaskPriorityEnum;
 
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', enum: TASK_CATEGORIES, default: 'OTHER', example: 'STUDY' })
+  @IsOptional()
+  @IsIn(TASK_CATEGORIES, { message: 'Categoria inválida.' })
+  category?: TaskCategory;
+
   @ApiPropertyOptional({ description: 'Data de entrega limite (ISO 8601)', example: '2026-12-31T23:59:59.000Z' })
   @IsOptional()
   @IsDateString({}, { message: 'Data de entrega limite deve ser uma string ISO válida.' })
@@ -72,6 +81,11 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsEnum(TaskPriorityEnum, { message: 'Prioridade inválida.' })
   priority?: TaskPriorityEnum;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', enum: TASK_CATEGORIES, example: 'STUDY' })
+  @IsOptional()
+  @IsIn(TASK_CATEGORIES, { message: 'Categoria inválida.' })
+  category?: TaskCategory;
 
   @ApiPropertyOptional({ description: 'Data de entrega limite (ISO 8601)' })
   @IsOptional()
@@ -105,6 +119,9 @@ export class TaskDto {
 
   @ApiProperty({ description: 'Prioridade da tarefa', enum: TaskPriorityEnum, example: TaskPriorityEnum.MEDIUM })
   priority!: TaskPriorityEnum;
+
+  @ApiProperty({ description: 'Categoria da tarefa', enum: TASK_CATEGORIES, example: 'STUDY' })
+  category!: TaskCategory;
 
   @ApiPropertyOptional({ description: 'Data limite de entrega', nullable: true })
   dueDate!: string | null;

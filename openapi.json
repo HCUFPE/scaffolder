@@ -1515,6 +1515,18 @@
             ],
             "default": "MEDIUM"
           },
+          "category": {
+            "type": "string",
+            "description": "Categoria da tarefa",
+            "enum": [
+              "WORK",
+              "STUDY",
+              "PERSONAL",
+              "OTHER"
+            ],
+            "default": "OTHER",
+            "example": "STUDY"
+          },
           "dueDate": {
             "type": "string",
             "description": "Data de entrega limite (ISO 8601)",
@@ -1590,6 +1602,17 @@
             ],
             "example": "MEDIUM"
           },
+          "category": {
+            "type": "string",
+            "description": "Categoria da tarefa",
+            "enum": [
+              "WORK",
+              "STUDY",
+              "PERSONAL",
+              "OTHER"
+            ],
+            "example": "STUDY"
+          },
           "dueDate": {
             "type": "object",
             "description": "Data limite de entrega",
@@ -1622,6 +1645,7 @@
           "title",
           "status",
           "priority",
+          "category",
           "ownerId",
           "createdAt",
           "updatedAt"
@@ -1685,6 +1709,17 @@
               "HIGH",
               "URGENT"
             ]
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoria da tarefa",
+            "enum": [
+              "WORK",
+              "STUDY",
+              "PERSONAL",
+              "OTHER"
+            ],
+            "example": "STUDY"
           },
           "dueDate": {
             "type": "string",
