@@ -24,6 +24,13 @@ export enum TaskPriorityEnum {
   URGENT = 'URGENT',
 }
 
+export enum TaskCategoryEnum{
+  WORK = 'WORK',
+  STUDY = 'STUDY',
+  PERSONAL = 'PERSONAL',
+  OTHER = 'OTHER',
+}
+
 export class CreateTaskDto {
   @ApiProperty({ description: 'Título da tarefa', example: 'Configurar monitoramento de produção', minLength: 3, maxLength: 150 })
   @IsString()
@@ -42,6 +49,11 @@ export class CreateTaskDto {
   @IsOptional()
   @IsEnum(TaskPriorityEnum, { message: 'Prioridade inválida.' })
   priority?: TaskPriorityEnum;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', enum: TaskCategoryEnum, default:TaskCategoryEnum.OTHER})
+  @IsOptional()
+  @IsEnum(TaskCategoryEnum, {message: 'Categoria inválida.'})
+  category?: TaskCategoryEnum;
 
   @ApiPropertyOptional({ description: 'Data de entrega limite (ISO 8601)', example: '2026-12-31T23:59:59.000Z' })
   @IsOptional()
@@ -72,6 +84,11 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsEnum(TaskPriorityEnum, { message: 'Prioridade inválida.' })
   priority?: TaskPriorityEnum;
+
+  @ApiPropertyOptional({ description: 'Categoria da tarefa', enum:TaskCategoryEnum})
+  @IsOptional()
+  @IsEnum(TaskCategoryEnum, { message: 'Categoria inválida.'})
+  category?: TaskCategoryEnum
 
   @ApiPropertyOptional({ description: 'Data de entrega limite (ISO 8601)' })
   @IsOptional()
@@ -105,6 +122,9 @@ export class TaskDto {
 
   @ApiProperty({ description: 'Prioridade da tarefa', enum: TaskPriorityEnum, example: TaskPriorityEnum.MEDIUM })
   priority!: TaskPriorityEnum;
+
+  @ApiProperty({ description: 'Categoria da tarefa', enum: TaskCategoryEnum, example: TaskCategoryEnum.OTHER })
+  category!: TaskCategoryEnum
 
   @ApiPropertyOptional({ description: 'Data limite de entrega', nullable: true })
   dueDate!: string | null;
@@ -140,6 +160,11 @@ export class ListTasksQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsEnum(TaskPriorityEnum)
   priority?: TaskPriorityEnum;
+
+  @ApiPropertyOptional({ description: 'Filtro por categoria', enum: TaskCategoryEnum })
+  @IsOptional()
+  @IsEnum(TaskCategoryEnum)
+  category?: TaskCategoryEnum
 
   @ApiPropertyOptional({ description: 'Campo de ordenação', enum: ['createdAt', 'dueDate', 'title', 'priority', 'status'], default: 'createdAt' })
   @IsOptional()
