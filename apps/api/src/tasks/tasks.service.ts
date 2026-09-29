@@ -39,6 +39,7 @@ export class TasksService {
       data: {
         title: dto.title.trim(),
         description: dto.description?.trim() || null,
+        category: dto.category?.trim() || null,
         priority: (dto.priority as TaskPriorityEnum) || TaskPriorityEnum.MEDIUM,
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         ownerId,
@@ -66,7 +67,7 @@ export class TasksService {
       deletedAt: null,
     };
 
-    // Autorização: Usuários comuns veem apenas suas próprias tarefas; ADMIN pode ver todas
+    // Autorização: Usuários comuns veem apenas suas próprias tarefas; ADMIN pode ver todas hasFieldChanges
     if (user.role !== 'ADMIN') {
       where.ownerId = user.id;
     }
@@ -173,6 +174,7 @@ export class TasksService {
     const hasFieldChanges =
       (dto.title !== undefined && dto.title !== existing.title) ||
       (dto.description !== undefined && dto.description !== existing.description) ||
+      (dto.category !== undefined && dto.category !== existing.category) ||
       (dto.priority !== undefined && dto.priority !== existing.priority) ||
       (dto.dueDate !== undefined);
 
@@ -197,6 +199,7 @@ export class TasksService {
       data: {
         ...(dto.title !== undefined ? { title: dto.title.trim() } : {}),
         ...(dto.description !== undefined ? { description: dto.description.trim() || null } : {}),
+        ...(dto.category !== undefined ? { category: dto.category.trim() || null } : {}),
         ...(dto.status !== undefined ? { status: dto.status as TaskStatusEnum } : {}),
         ...(dto.priority !== undefined ? { priority: dto.priority as TaskPriorityEnum } : {}),
         ...(dto.dueDate !== undefined ? { dueDate: dto.dueDate ? new Date(dto.dueDate) : null } : {}),
@@ -245,6 +248,7 @@ export class TasksService {
       id: task.id,
       title: task.title,
       description: task.description,
+      category: task.category,
       status: task.status as TaskStatusEnum,
       priority: task.priority as TaskPriorityEnum,
       dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,

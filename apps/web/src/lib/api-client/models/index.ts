@@ -25,6 +25,7 @@ export * from './safeUserProfileDto';
 export * from './safeUserProfileDtoRole';
 export * from './setUserStatusDto';
 export * from './taskDto';
+export * from './taskDtoCategory';
 export * from './taskDtoDescription';
 export * from './taskDtoDueDate';
 export * from './taskDtoPriority';

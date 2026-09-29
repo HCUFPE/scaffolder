@@ -20,6 +20,11 @@ export interface UpdateTaskDto {
      * @maxLength 1000
      */
   description?: string;
+  /**
+     * Categoria da tarefa
+     * @maxLength 100
+     */
+  category?: string;
   /** Status atual da tarefa */
   status?: UpdateTaskDtoStatus;
   /** Prioridade da tarefa */

@@ -2,11 +2,13 @@ import { spawn } from 'node:child_process';
 
 export function runCommand(command, args, options = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
-      stdio: 'inherit',
-      shell: false,
-      ...options
-    });
+    const useWindowsPnpmShim = process.platform === 'win32' && command === 'pnpm';
+    // Windows exposes pnpm through a .cmd shim, which Node cannot spawn
+    // directly without a shell. These pnpm arguments are fixed by project
+    // scripts, not user input.
+    const child = useWindowsPnpmShim
+      ? spawn(`${command} ${args.join(' ')}`, { stdio: 'inherit', shell: true, ...options })
+      : spawn(command, args, { stdio: 'inherit', shell: false, ...options });
 
     child.on('error', (error) => reject(error));
     child.on('exit', (code, signal) => {

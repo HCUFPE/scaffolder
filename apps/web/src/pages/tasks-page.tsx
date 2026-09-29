@@ -43,6 +43,7 @@ const taskFormSchema = z.object({
     .min(3, 'O título deve ter no mínimo 3 caracteres.')
     .max(150, 'O título deve ter no máximo 150 caracteres.'),
   description: z.string().max(1000, 'Máximo de 1000 caracteres.').optional(),
+  category: z.string().max(100, 'A categoria deve ter no máximo 100 caracteres.').optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
   dueDate: z.string().optional(),
 });
@@ -119,6 +120,7 @@ export function TasksPage() {
     defaultValues: {
       title: '',
       description: '',
+      category: '',
       priority: 'MEDIUM',
       dueDate: '',
     },
@@ -129,6 +131,7 @@ export function TasksPage() {
       const res = await tasksControllerCreate({
         title: data.title,
         description: data.description || undefined,
+        category: data.category?.trim() || undefined,
         priority: data.priority as any,
         dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
       });
@@ -163,6 +166,7 @@ export function TasksPage() {
       data: {
         title?: string;
         description?: string;
+        category?: string;
         priority?: TaskDtoPriority;
         status?: TaskDtoStatus;
         dueDate?: string;
@@ -357,6 +361,7 @@ export function TasksPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {tasks.map((task) => {
               const desc = typeof task.description === 'string' ? task.description : '';
+              const category = typeof task.category === 'string' ? task.category : '';
               const dueStr = typeof task.dueDate === 'string' ? task.dueDate : '';
 
               return (
@@ -381,6 +386,7 @@ export function TasksPage() {
                           {desc}
                         </p>
                       )}
+                      {category && <Badge variant="outline">{category}</Badge>}
                     </div>
 
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
@@ -532,6 +538,13 @@ export function TasksPage() {
                 error={createErrors.title?.message}
               />
 
+              <Input
+                label="Categoria"
+                placeholder="Ex.: Estudos, Trabalho, Casa"
+                {...registerCreate('category')}
+                error={createErrors.category?.message}
+              />
+
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Descrição
@@ -618,6 +631,7 @@ function EditTaskModal({
 }) {
   const isCompleted = task.status === 'COMPLETED';
   const rawDesc = typeof task.description === 'string' ? task.description : '';
+  const rawCategory = typeof task.category === 'string' ? task.category : '';
   const rawDue = typeof task.dueDate === 'string' ? (task.dueDate as unknown as string).split('T')[0] : '';
 
   const {
@@ -629,6 +643,7 @@ function EditTaskModal({
     defaultValues: {
       title: task.title,
       description: rawDesc,
+      category: rawCategory,
       priority: task.priority as any,
       status: task.status as any,
       dueDate: rawDue,
@@ -666,6 +681,7 @@ function EditTaskModal({
             onSubmit({
               title: data.title,
               description: data.description || undefined,
+              category: data.category?.trim(),
               priority: data.priority,
               status: data.status,
               dueDate: data.dueDate ? new Date(data.dueDate).toISOString() : undefined,
@@ -678,6 +694,13 @@ function EditTaskModal({
             disabled={isCompleted}
             {...register('title')}
             error={errors.title?.message}
+          />
+
+          <Input
+            label="Categoria"
+            disabled={isCompleted}
+            {...register('category')}
+            error={errors.category?.message}
           />
 
           <div className="flex flex-col gap-1.5">
