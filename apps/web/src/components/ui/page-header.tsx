@@ -22,12 +22,12 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div
-      className={`bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 ${className}`}
+      className={`bg-surface border border-line rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 ${className}`}
     >
       <div>
         <div className="flex items-center gap-2 mb-2">
           {category && (
-            <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-accent-text uppercase tracking-wider">
               {category}
             </span>
           )}
@@ -37,11 +37,11 @@ export function PageHeader({
             </Badge>
           )}
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-heading">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
+          <p className="text-sm text-muted mt-1 max-w-xl">
             {subtitle}
           </p>
         )}

@@ -15,8 +15,16 @@ import {
   X,
 } from 'lucide-react';
 import { useAuth } from '../../context/auth-context';
+import { BrandAssetSlot } from '../brand/brand-asset-slot';
 import { ThemeToggle } from '../ui/theme-toggle';
 import { UserDropdown } from '../ui/user-dropdown';
+
+/**
+ * Chave de persistência do estado da sidebar.
+ * Mantida com o nome técnico legado para preservar a preferência já salva
+ * pelos usuários (não é exibida na interface).
+ */
+const SIDEBAR_STORAGE_KEY = 'appstart_sidebar_collapsed';
 
 export function AuthLayout() {
   const { user, isAdmin, logout, manageAccount } = useAuth();
@@ -26,7 +34,7 @@ export function AuthLayout() {
   // Desktop sidebar collapsed state with localStorage persistence
   const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('appstart_sidebar_collapsed') === 'true';
+      return localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true';
     } catch {
       return false;
     }
@@ -47,7 +55,7 @@ export function AuthLayout() {
     setIsCollapsed((prev) => {
       const next = !prev;
       try {
-        localStorage.setItem('appstart_sidebar_collapsed', String(next));
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, String(next));
       } catch (_) {}
       return next;
     });
@@ -125,20 +133,23 @@ export function AuthLayout() {
 
   const pageContext = getPageContext();
 
+  // The mobile drawer always has room for the complete brand slot.
+  const showCompactBrand = isCollapsed && !isMobileOpen;
+
   return (
-    <div className="min-h-screen flex bg-slate-100/70 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased">
+    <div className="min-h-screen flex bg-canvas text-body font-sans antialiased">
       {/* Mobile Drawer Overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs md:hidden animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 bg-brand-dark/70 backdrop-blur-xs md:hidden animate-in fade-in duration-150"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
 
-      {/* OneUI Sidebar (sidebar-dark theme) with Edge Floating Toggle Button */}
+      {/* OneUI Sidebar (institutional theme) with Edge Floating Toggle Button */}
       <aside
         id="sidebar"
-        className={`fixed md:sticky top-0 z-50 h-screen flex flex-col bg-slate-900 text-slate-300 border-r border-slate-800 shadow-xl md:shadow-none transition-all duration-300 ease-in-out relative ${
+        className={`fixed md:sticky top-0 z-50 h-screen flex flex-col bg-sidebar text-sidebar-fg border-r border-sidebar-line shadow-xl md:shadow-none transition-all duration-300 ease-in-out relative ${
           isCollapsed ? 'md:w-20' : 'md:w-64'
         } ${
           isMobileOpen
@@ -149,7 +160,7 @@ export function AuthLayout() {
         {/* Floating Toggle Button on the side border (Desktop) */}
         <button
           onClick={toggleSidebar}
-          className="hidden md:flex absolute -right-3 top-5 z-50 h-6 w-6 rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white hover:bg-blue-600 hover:border-blue-600 shadow-md items-center justify-center transition-all cursor-pointer hover:scale-110"
+          className="hidden md:flex absolute -right-3 top-6 z-50 h-6 w-6 rounded-full bg-sidebar border border-sidebar-line text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-active hover:border-sidebar-active shadow-md items-center justify-center transition-all cursor-pointer hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
           title={isCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
           aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
         >
@@ -160,32 +171,28 @@ export function AuthLayout() {
           )}
         </button>
 
-        {/* Sidebar Content Header */}
+        {/* Sidebar Content Header — Clínica Digital UFPE brand slot */}
         <div
-          className={`h-16 flex items-center border-b border-slate-800/90 shrink-0 bg-slate-900/95 transition-all ${
-            isCollapsed ? 'justify-center px-2' : 'justify-between px-4'
+          className={`h-18 flex items-center border-b border-sidebar-line shrink-0 transition-all ${
+            showCompactBrand ? 'justify-center px-2' : 'justify-between px-4'
           }`}
         >
           <Link
             to="/"
-            className="flex items-center gap-2.5 font-bold text-white overflow-hidden group min-w-0"
+            aria-label="Clínica Digital UFPE — página inicial"
+            className="flex items-center rounded-md text-sidebar-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-indicator"
           >
-            {/* OneUI Brand Icon */}
-            <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-xs shadow-sm shadow-blue-500/30 group-hover:bg-blue-500 transition-colors shrink-0">
-              AS
-            </div>
-
-            {!isCollapsed && (
-              <span className="tracking-wider font-extrabold text-base text-white leading-tight truncate">
-                AppStart
-              </span>
+            {showCompactBrand ? (
+              <BrandAssetSlot variant="compact" />
+            ) : (
+              <BrandAssetSlot variant="header" />
             )}
           </Link>
 
           {/* Mobile Close Button */}
           <button
             onClick={() => setIsMobileOpen(false)}
-            className="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 shrink-0"
+            className="md:hidden p-1.5 rounded-lg text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover shrink-0"
             aria-label="Fechar menu"
           >
             <X className="h-5 w-5" />
@@ -198,11 +205,11 @@ export function AuthLayout() {
             <div key={groupIdx} className="space-y-1">
               {/* OneUI nav-main-heading */}
               {!isCollapsed ? (
-                <div className="px-3 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="px-3 pt-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-sidebar-muted">
                   {group.heading}
                 </div>
               ) : (
-                <div className="my-2 border-t border-slate-800" />
+                <div className="my-2 border-t border-sidebar-line" />
               )}
 
               {/* OneUI nav-main-link list */}
@@ -213,23 +220,31 @@ export function AuthLayout() {
                   end={item.path === '/'}
                   title={isCollapsed ? item.label : undefined}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg text-sm font-medium transition-colors group relative ${
+                    `flex items-center gap-3 rounded-lg text-sm font-medium transition-colors group relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-indicator ${
                       isCollapsed ? 'justify-center h-10 w-10 mx-auto px-0' : 'px-3 py-2'
                     } ${
                       isActive
-                        ? 'bg-blue-600 text-white font-semibold shadow-sm shadow-blue-600/30'
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/80'
+                        ? 'bg-sidebar-active text-sidebar-fg font-semibold shadow-sm'
+                        : 'text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover'
                     }`
                   }
                 >
                   {({ isActive }) => (
                     <>
+                      {/* Active indicator (shape cue, not color only) */}
+                      {isActive && !isCollapsed && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute -left-3 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r bg-sidebar-indicator"
+                        />
+                      )}
+
                       {/* nav-main-link-icon */}
                       <div
                         className={`${
                           isActive
-                            ? 'text-white'
-                            : 'text-slate-400 group-hover:text-white'
+                            ? 'text-sidebar-fg'
+                            : 'text-sidebar-muted group-hover:text-sidebar-fg'
                         }`}
                       >
                         {item.icon}
@@ -243,8 +258,8 @@ export function AuthLayout() {
                             <span
                               className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
                                 isActive
-                                  ? 'bg-white/20 text-white'
-                                  : 'bg-slate-800 text-slate-400 border border-slate-700/60'
+                                  ? 'bg-sidebar-fg/20 text-sidebar-fg'
+                                  : 'bg-sidebar-hover text-sidebar-muted border border-sidebar-line'
                               }`}
                             >
                               {item.badge}
@@ -261,14 +276,14 @@ export function AuthLayout() {
         </nav>
 
         {/* Sidebar Bottom Action (OneUI Style) */}
-        <div className="p-3 border-t border-slate-800 bg-slate-900/90 shrink-0">
+        <div className="p-3 border-t border-sidebar-line shrink-0">
           {!isCollapsed ? (
             <button
               onClick={manageAccount}
-              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover transition-colors cursor-pointer"
             >
               <span className="flex items-center gap-2">
-                <KeyRound className="h-3.5 w-3.5 text-blue-400" />
+                <KeyRound className="h-3.5 w-3.5 text-sidebar-indicator" />
                 <span>Central de Segurança</span>
               </span>
               <ExternalLink className="h-3.5 w-3.5 opacity-60" />
@@ -277,9 +292,10 @@ export function AuthLayout() {
             <button
               onClick={manageAccount}
               title="Central de Segurança"
-              className="h-10 w-10 mx-auto flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Central de Segurança"
+              className="h-10 w-10 mx-auto flex items-center justify-center rounded-lg text-sidebar-muted hover:text-sidebar-fg hover:bg-sidebar-hover transition-colors cursor-pointer"
             >
-              <KeyRound className="h-4 w-4 text-blue-400" />
+              <KeyRound className="h-4 w-4 text-sidebar-indicator" />
             </button>
           )}
         </div>
@@ -290,23 +306,34 @@ export function AuthLayout() {
         {/* Top App Header (OneUI Header Bar) */}
         <header
           id="page-header"
-          className="sticky top-0 z-40 h-16 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between"
+          className="sticky top-0 z-40 h-18 border-b border-line bg-surface/95 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-4 flex-1">
+          <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setIsMobileOpen(true)}
-              className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="md:hidden p-2 rounded-lg text-body hover:bg-surface-muted shrink-0"
               aria-label="Abrir menu lateral"
             >
               <Menu className="h-5 w-5" />
             </button>
 
+            {/* Mobile brand: reduced variant, compact on very narrow viewports */}
+            <Link
+              to="/"
+              aria-label="Clínica Digital UFPE — página inicial"
+              data-testid="mobile-brand"
+              className="md:hidden flex items-center text-heading rounded-md"
+            >
+              <BrandAssetSlot variant="compact" className="min-[340px]:hidden" />
+              <BrandAssetSlot variant="reduced" className="hidden min-[340px]:inline-flex" />
+            </Link>
+
             {/* Breadcrumb Context Navigation */}
-            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 font-medium">
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted font-medium">
               <span>{pageContext.category}</span>
-              <span>/</span>
-              <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+              <span aria-hidden="true">/</span>
+              <span className="font-bold text-heading text-sm">
                 {pageContext.title}
               </span>
             </div>
@@ -316,19 +343,20 @@ export function AuthLayout() {
               onSubmit={handleQuickSearch}
               className="hidden lg:flex items-center relative max-w-xs w-full ml-4"
             >
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar tarefas..."
-                className="w-full h-8 pl-8 pr-3 text-xs bg-slate-100 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 rounded-lg placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all"
+                aria-label="Buscar tarefas"
+                className="w-full h-8 pl-8 pr-3 text-xs text-body bg-surface-muted border border-line rounded-lg placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-focus-ring transition-all"
               />
             </form>
           </div>
 
           {/* Right Header Controls (OneUI User Dropdown & Theme Toggle) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <ThemeToggle />
 
             {/* Reusable UserDropdown Component */}
@@ -346,12 +374,15 @@ export function AuthLayout() {
           <Outlet />
         </main>
 
-        {/* Footer */}
-        <footer className="border-t border-slate-200/80 dark:border-slate-800/80 bg-white/50 dark:bg-slate-900/50 py-4 px-6 text-center text-xs text-slate-500 dark:text-slate-400">
-          <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span>AppStart — Template Pedagógico Full Stack (NestJS & React)</span>
+        {/* Footer — institutional NUTES/UFPE lockup */}
+        <footer className="border-t border-line bg-surface/60 py-4 px-4 sm:px-6 text-xs text-muted">
+          <div className="container mx-auto flex flex-col lg:flex-row items-center justify-between gap-3 text-center lg:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-body">
+              <BrandAssetSlot variant="institutional-lockup" />
+              <span className="font-bold text-heading">Clínica Digital UFPE</span>
+            </div>
             <span className="flex items-center gap-1">
-              <Shield className="h-3.5 w-3.5 text-blue-500" />
+              <Shield className="h-3.5 w-3.5 text-accent-text" aria-hidden="true" />
               Sessão OIDC protegida por cookies HTTP-only
             </span>
           </div>

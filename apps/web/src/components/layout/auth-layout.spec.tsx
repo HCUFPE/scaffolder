@@ -35,7 +35,7 @@ describe('AuthLayout', () => {
     );
 
     // Sidebar branding and category headings
-    expect(screen.getByText('AppStart')).toBeInTheDocument();
+    expect(screen.getByText('Clínica Digital UFPE')).toBeInTheDocument();
     expect(screen.getAllByText('Visão Geral').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Módulos').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('Tarefas (CRUD)')).toBeInTheDocument();

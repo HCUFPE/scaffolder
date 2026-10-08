@@ -236,11 +236,11 @@ export function TasksPage() {
       {/* Header and Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-            <ListTodo className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl font-bold tracking-tight text-heading flex items-center gap-2">
+            <ListTodo className="h-6 w-6 text-brand-text" />
             Módulo de Referência: Tarefas
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-muted dark:text-muted">
             Exemplo didático com regras de negócio, ownership, busca, paginação e remoção lógica.
           </p>
         </div>
@@ -265,13 +265,13 @@ export function TasksPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
               <input
                 type="text"
                 placeholder="Buscar por título..."
                 defaultValue={search}
                 onChange={(e) => updateParams({ search: e.target.value || undefined, page: 1 })}
-                className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="flex h-10 w-full rounded-md border border-line-strong bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
               />
             </div>
 
@@ -279,7 +279,7 @@ export function TasksPage() {
             <select
               value={statusFilter}
               onChange={(e) => updateParams({ status: e.target.value || undefined, page: 1 })}
-              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
             >
               <option value="">Todos os Status</option>
               <option value="PENDING">Pendente</option>
@@ -292,7 +292,7 @@ export function TasksPage() {
             <select
               value={priorityFilter}
               onChange={(e) => updateParams({ priority: e.target.value || undefined, page: 1 })}
-              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
             >
               <option value="">Todas as Prioridades</option>
               <option value="LOW">Baixa</option>
@@ -308,7 +308,7 @@ export function TasksPage() {
                 const [sb, so] = e.target.value.split(':');
                 updateParams({ sortBy: sb, sortOrder: so, page: 1 });
               }}
-              className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
             >
               <option value="createdAt:desc">Mais recentes primeiro</option>
               <option value="createdAt:asc">Mais antigas primeiro</option>
@@ -362,12 +362,12 @@ export function TasksPage() {
               return (
                 <Card
                   key={task.id}
-                  className="overflow-hidden hover:border-slate-300 dark:hover:border-slate-700 transition-colors shadow-sm"
+                  className="overflow-hidden hover:border-line-strong transition-colors shadow-sm"
                 >
                   <CardContent className="p-5 flex flex-col justify-between h-full space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-semibold text-base text-slate-900 dark:text-white line-clamp-1">
+                        <h3 className="font-semibold text-base text-heading line-clamp-1">
                           {task.title}
                         </h3>
                         <div className="flex items-center gap-1.5 shrink-0">
@@ -377,22 +377,22 @@ export function TasksPage() {
                       </div>
 
                       {desc && (
-                        <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2">
+                        <p className="text-xs text-muted dark:text-muted line-clamp-2">
                           {desc}
                         </p>
                       )}
                     </div>
 
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500">
+                    <div className="pt-3 border-t border-line flex items-center justify-between text-xs text-muted">
                       <div className="flex items-center gap-3">
                         {dueStr && (
-                          <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
+                          <div className="flex items-center gap-1 text-muted dark:text-muted">
                             <Calendar className="h-3.5 w-3.5" />
                             <span>{new Date(dueStr).toLocaleDateString('pt-BR')}</span>
                           </div>
                         )}
                         {isAdmin && task.owner && (
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-[11px] text-muted">
                             Por: {task.owner.name}
                           </span>
                         )}
@@ -404,7 +404,7 @@ export function TasksPage() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-8 px-2 text-green-600 hover:text-green-700 hover:bg-green-50 dark:hover:bg-green-950/30"
+                            className="h-8 px-2 text-success-text hover:text-success-text hover:bg-success-subtle dark:hover:bg-success-subtle/30"
                             title="Marcar como Concluída"
                             isLoading={updateMutation.isPending && updateMutation.variables?.id === task.id}
                             onClick={() =>
@@ -421,7 +421,7 @@ export function TasksPage() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-8 px-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                            className="h-8 px-2 text-warning-text hover:text-warning-text hover:bg-warning-subtle dark:hover:bg-warning-subtle/30"
                             title="Reabrir Tarefa"
                             isLoading={updateMutation.isPending && updateMutation.variables?.id === task.id}
                             onClick={() =>
@@ -443,13 +443,13 @@ export function TasksPage() {
                           title="Editar Tarefa"
                           onClick={() => setEditingTask(task)}
                         >
-                          <Edit2 className="h-3.5 w-3.5 text-slate-500" />
+                          <Edit2 className="h-3.5 w-3.5 text-muted" />
                         </Button>
 
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-8 w-8 p-0 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+                          className="h-8 w-8 p-0 text-danger-text hover:text-danger-text hover:bg-danger-subtle dark:hover:bg-danger-subtle/30"
                           title="Excluir Tarefa (Remoção Lógica)"
                           isLoading={deleteMutation.isPending && deleteMutation.variables === task.id}
                           onClick={() => {
@@ -469,7 +469,7 @@ export function TasksPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-500">
+          <div className="flex items-center justify-between p-4 bg-white dark:bg-surface-muted border border-line dark:border-line rounded-xl text-xs text-muted">
             <div>
               Mostrando <strong>{tasks.length}</strong> de <strong>{meta.total}</strong> tarefas
             </div>
@@ -503,18 +503,18 @@ export function TasksPage() {
       {/* Create Modal */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-md w-full p-6 relative">
+          <div className="bg-white dark:bg-surface-muted rounded-2xl border border-line dark:border-line shadow-xl max-w-md w-full p-6 relative">
             <button
               onClick={() => setIsCreateOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute top-4 right-4 text-muted hover:text-muted dark:hover:text-body"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-heading mb-1">
               Nova Tarefa de Referência
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+            <p className="text-xs text-muted dark:text-muted mb-4">
               Crie uma tarefa demonstrando regras de negócio e validação por formulário.
             </p>
 
@@ -533,28 +533,28 @@ export function TasksPage() {
               />
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label className="text-sm font-medium text-body dark:text-muted">
                   Descrição
                 </label>
                 <textarea
                   rows={3}
                   placeholder="Detalhes opcionais sobre a atividade..."
                   {...registerCreate('description')}
-                  className="flex w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="flex w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
                 />
                 {createErrors.description?.message && (
-                  <span className="text-xs text-red-500">{createErrors.description.message}</span>
+                  <span className="text-xs text-danger-text">{createErrors.description.message}</span>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <label className="text-sm font-medium text-body dark:text-muted">
                     Prioridade
                   </label>
                   <select
                     {...registerCreate('priority')}
-                    className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
                   >
                     <option value="LOW">Baixa</option>
                     <option value="MEDIUM">Média</option>
@@ -571,7 +571,7 @@ export function TasksPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-line">
                 <Button
                   type="button"
                   variant="outline"
@@ -637,23 +637,23 @@ function EditTaskModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-md w-full p-6 relative">
+      <div className="bg-white dark:bg-surface-muted rounded-2xl border border-line dark:border-line shadow-xl max-w-md w-full p-6 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+          className="absolute top-4 right-4 text-muted hover:text-muted dark:hover:text-body"
         >
           <X className="h-5 w-5" />
         </button>
 
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+        <h3 className="text-lg font-bold text-heading mb-1">
           Editar Tarefa
         </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+        <p className="text-xs text-muted dark:text-muted mb-4">
           Atualize os campos ou status da tarefa.
         </p>
 
         {isCompleted && (
-          <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 rounded-lg flex items-start gap-2 text-xs text-amber-800 dark:text-amber-300">
+          <div className="mb-4 p-3 bg-warning-subtle/40 border border-warning-line/50 rounded-lg flex items-start gap-2 text-xs text-warning-text">
             <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
             <span>
               <strong>Regra de Negócio:</strong> Tarefas concluídas não podem ter detalhes alterados. Para editar, reabra a tarefa alterando o status para "Pendente" ou "Em Andamento".
@@ -681,25 +681,25 @@ function EditTaskModal({
           />
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label className="text-sm font-medium text-body dark:text-muted">
               Descrição
             </label>
             <textarea
               rows={3}
               disabled={isCompleted}
               {...register('description')}
-              className="flex w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label className="text-sm font-medium text-body dark:text-muted">
                 Status
               </label>
               <select
                 {...register('status')}
-                className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
               >
                 <option value="PENDING">Pendente</option>
                 <option value="IN_PROGRESS">Em Andamento</option>
@@ -709,13 +709,13 @@ function EditTaskModal({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label className="text-sm font-medium text-body dark:text-muted">
                 Prioridade
               </label>
               <select
                 disabled={isCompleted}
                 {...register('priority')}
-                className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex h-10 w-full rounded-md border border-line-strong bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="LOW">Baixa</option>
                 <option value="MEDIUM">Média</option>
@@ -733,7 +733,7 @@ function EditTaskModal({
             error={errors.dueDate?.message}
           />
 
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-line">
             <Button type="button" variant="outline" size="sm" onClick={onClose}>
               Cancelar
             </Button>

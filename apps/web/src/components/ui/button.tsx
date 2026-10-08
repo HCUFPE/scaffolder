@@ -21,12 +21,12 @@ export function Button({
     'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-md cursor-pointer select-none';
 
   const variants = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-600',
-    secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
-    outline: 'border border-slate-300 bg-transparent hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200',
-    ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200',
-    destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
-    link: 'text-blue-600 underline-offset-4 hover:underline p-0 h-auto',
+    default: 'bg-brand-primary text-on-brand hover:bg-brand-primary-hover focus-visible:ring-focus-ring',
+    secondary: 'bg-surface-muted text-heading hover:bg-surface-strong',
+    outline: 'border border-line bg-transparent hover:bg-surface-muted text-body',
+    ghost: 'bg-transparent hover:bg-surface-muted text-body',
+    destructive: 'bg-danger text-on-brand hover:bg-danger/90 focus-visible:ring-danger',
+    link: 'text-brand-text underline-offset-4 hover:underline p-0 h-auto',
   };
 
   const sizes = {

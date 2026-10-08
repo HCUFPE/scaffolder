@@ -67,10 +67,10 @@ export function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-heading ">
           Meu Perfil
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-muted dark:text-muted">
           Consulte suas informações de identificação e atualize seus dados pessoais.
         </p>
       </div>
@@ -87,7 +87,7 @@ export function ProfilePage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
-            <User className="h-4 w-4 text-blue-600" />
+            <User className="h-4 w-4 text-brand-text" />
             Dados Cadastrais
           </CardTitle>
           <CardDescription>
@@ -104,15 +104,15 @@ export function ProfilePage() {
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                <span className="text-xs text-slate-500 block mb-1">E-mail Cadastrado</span>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate block">
+              <div className="p-3 bg-surface-muted dark:bg-surface-muted/50 rounded-lg border border-line/60 dark:border-line">
+                <span className="text-xs text-muted block mb-1">E-mail Cadastrado</span>
+                <span className="text-sm font-medium text-body dark:text-muted truncate block">
                   {user?.email}
                 </span>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                <span className="text-xs text-slate-500 block mb-1">Perfil de Acesso</span>
+              <div className="p-3 bg-surface-muted dark:bg-surface-muted/50 rounded-lg border border-line/60 dark:border-line">
+                <span className="text-xs text-muted block mb-1">Perfil de Acesso</span>
                 <Badge variant={user?.role === 'ADMIN' ? 'default' : 'secondary'} className="text-[10px]">
                   {user?.role}
                 </Badge>
@@ -120,25 +120,25 @@ export function ProfilePage() {
             </div>
 
             {/* Read-only Security Details */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                <span className="text-xs text-slate-500 block mb-1">Status da Conta</span>
-                <div className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 font-medium">
+            <div className="pt-2 border-t border-line dark:border-line grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-3 bg-surface-muted dark:bg-surface-muted/50 rounded-lg border border-line/60 dark:border-line">
+                <span className="text-xs text-muted block mb-1">Status da Conta</span>
+                <div className="flex items-center gap-1.5 text-xs text-success-text dark:text-success-text font-medium">
                   <Shield className="h-3.5 w-3.5" />
                   <span>Conta Ativa & Verificada</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200/60 dark:border-slate-800">
-                <span className="text-xs text-slate-500 block mb-1">ID Único Local</span>
-                <span className="text-xs font-mono text-slate-700 dark:text-slate-300 truncate block">
+              <div className="p-3 bg-surface-muted dark:bg-surface-muted/50 rounded-lg border border-line/60 dark:border-line">
+                <span className="text-xs text-muted block mb-1">ID Único Local</span>
+                <span className="text-xs font-mono text-body dark:text-muted truncate block">
                   {user?.id}
                 </span>
               </div>
             </div>
           </CardContent>
 
-          <CardFooter className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-4">
+          <CardFooter className="flex items-center justify-between border-t border-line dark:border-line pt-4">
             <Button
               type="button"
               variant="outline"

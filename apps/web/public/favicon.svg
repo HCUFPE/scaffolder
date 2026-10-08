@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Favicon provisório — Clínica Digital UFPE">
+  <!-- PLACEHOLDER PROVISÓRIO: substituir pelo favicon oficial (ver src/components/brand/README.md). -->
+  <!-- Intencionalmente neutro: não imita o logótipo nem o ícone-cruz oficiais. -->
+  <rect x="1.5" y="1.5" width="29" height="29" rx="5" fill="#E9E9EC" stroke="#58595B" stroke-width="2" stroke-dasharray="4 3"/>
+  <circle cx="16" cy="16" r="3" fill="#58595B"/>
+</svg>

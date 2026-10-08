@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Moon, Sun, Monitor, ChevronDown } from 'lucide-react';
 import { useTheme, type Theme } from '../../context/theme-context';
 import { Button } from './button';
@@ -19,9 +19,9 @@ export function ThemeToggle() {
   }, []);
 
   const options: { label: string; value: Theme; icon: React.ReactNode }[] = [
-    { label: 'Claro', value: 'light', icon: <Sun className="h-4 w-4 mr-2 text-amber-500" /> },
-    { label: 'Escuro', value: 'dark', icon: <Moon className="h-4 w-4 mr-2 text-blue-400" /> },
-    { label: 'Sistema', value: 'system', icon: <Monitor className="h-4 w-4 mr-2 text-slate-400" /> },
+    { label: 'Claro', value: 'light', icon: <Sun className="h-4 w-4 mr-2 text-warning-text" /> },
+    { label: 'Escuro', value: 'dark', icon: <Moon className="h-4 w-4 mr-2 text-brand-text" /> },
+    { label: 'Sistema', value: 'system', icon: <Monitor className="h-4 w-4 mr-2 text-muted" /> },
   ];
 
   return (
@@ -34,16 +34,16 @@ export function ThemeToggle() {
         className="flex items-center gap-1.5 px-2.5 h-9"
       >
         {resolvedTheme === 'dark' ? (
-          <Moon className="h-4 w-4 text-blue-400" />
+          <Moon className="h-4 w-4 text-brand-text" />
         ) : (
-          <Sun className="h-4 w-4 text-amber-500" />
+          <Sun className="h-4 w-4 text-warning-text" />
         )}
         <span className="hidden sm:inline text-xs font-medium capitalize">{theme}</span>
         <ChevronDown className="h-3 w-3 opacity-60" />
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 ring-1 ring-black/5 z-50 py-1">
+        <div className="absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-surface border border-line ring-1 ring-black/5 z-50 py-1">
           {options.map((option) => (
             <button
               key={option.value}
@@ -53,8 +53,8 @@ export function ThemeToggle() {
               }}
               className={`w-full flex items-center px-3 py-2 text-xs font-medium transition-colors text-left ${
                 theme === option.value
-                  ? 'bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                  ? 'bg-surface-muted text-brand-text font-semibold'
+                  : 'text-body hover:bg-surface-muted'
               }`}
             >
               {option.icon}

@@ -145,11 +145,11 @@ export function UsersPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-            <Users className="h-6 w-6 text-blue-600" />
+          <h1 className="text-2xl font-bold tracking-tight text-heading  flex items-center gap-2">
+            <Users className="h-6 w-6 text-brand-text" />
             Gerenciamento de Usuários
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-muted dark:text-muted">
             Provisionamento, listagem e controle de acesso integrado ao serviço de identidade.
           </p>
         </div>
@@ -173,13 +173,13 @@ export function UsersPage() {
         <CardContent className="p-4">
           <form onSubmit={onSearchSubmit} className="flex gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
               <input
                 type="text"
                 name="query"
                 defaultValue={search}
                 placeholder="Buscar por nome ou e-mail..."
-                className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="flex h-10 w-full rounded-md border border-line dark:border-line bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
               />
             </div>
             <Button type="submit" variant="secondary" size="md">
@@ -234,7 +234,7 @@ export function UsersPage() {
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-xs uppercase font-semibold text-slate-600 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-surface-muted dark:bg-surface-muted/60 text-xs uppercase font-semibold text-muted dark:text-muted border-b border-line dark:border-line">
                 <tr>
                   <th className="py-3.5 px-4">Nome</th>
                   <th className="py-3.5 px-4">E-mail</th>
@@ -243,13 +243,13 @@ export function UsersPage() {
                   <th className="py-3.5 px-4 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
+              <tbody className="divide-y divide-line dark:divide-line/80">
                 {users.map((item: ManagedUserDto) => (
-                  <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
-                    <td className="py-3.5 px-4 font-medium text-slate-900 dark:text-slate-100">
+                  <tr key={item.id} className="hover:bg-surface-muted/50 dark:hover:bg-surface-muted/30 transition-colors">
+                    <td className="py-3.5 px-4 font-medium text-heading dark:text-body">
                       {item.name}
                     </td>
-                    <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
+                    <td className="py-3.5 px-4 text-muted dark:text-muted">
                       {item.email}
                     </td>
                     <td className="py-3.5 px-4">
@@ -274,12 +274,12 @@ export function UsersPage() {
                       >
                         {item.isActive ? (
                           <>
-                            <UserX className="h-3.5 w-3.5 text-red-500" />
+                            <UserX className="h-3.5 w-3.5 text-danger-text" />
                             Desativar
                           </>
                         ) : (
                           <>
-                            <UserCheck className="h-3.5 w-3.5 text-green-500" />
+                            <UserCheck className="h-3.5 w-3.5 text-success-text" />
                             Ativar
                           </>
                         )}
@@ -292,7 +292,7 @@ export function UsersPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between p-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
+          <div className="flex items-center justify-between p-4 border-t border-line dark:border-line text-xs text-muted">
             <div>
               Total de <strong>{meta.total}</strong> usuários (Página {meta.page} de {meta.totalPages})
             </div>
@@ -324,18 +324,18 @@ export function UsersPage() {
       {/* Create User Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-md w-full p-6 relative">
+          <div className="bg-white dark:bg-surface-muted rounded-2xl border border-line dark:border-line shadow-xl max-w-md w-full p-6 relative">
             <button
               onClick={() => setIsCreateModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute top-4 right-4 text-muted hover:text-muted dark:hover:text-body"
             >
               <X className="h-5 w-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+            <h3 className="text-lg font-bold text-heading  mb-1">
               Novo Usuário
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+            <p className="text-xs text-muted dark:text-muted mb-4">
               O usuário será cadastrado no serviço de identidade e terá o perfil sincronizado localmente.
             </p>
 
@@ -356,24 +356,24 @@ export function UsersPage() {
               />
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                <label className="text-sm font-medium text-body dark:text-muted">
                   Papel de Acesso
                 </label>
                 <select
                   {...register('role')}
-                  className="flex h-10 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="flex h-10 w-full rounded-md border border-line dark:border-line bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
                 >
                   <option value="USER">USER (Aluno / Usuário Comum)</option>
                   <option value="ADMIN">ADMIN (Administrador)</option>
                 </select>
                 {formErrors.role?.message && (
-                  <span className="text-xs text-red-500 font-medium">
+                  <span className="text-xs text-danger-text font-medium">
                     {formErrors.role.message}
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-line dark:border-line">
                 <Button
                   type="button"
                   variant="outline"

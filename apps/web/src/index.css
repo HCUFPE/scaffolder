@@ -2,55 +2,251 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Identidade visual Clínica Digital UFPE
+ * ---------------------------------------------------------------------------
+ * Esta folha é a ÚNICA fonte de cores institucionais da aplicação.
+ * Componentes e páginas devem consumir os tokens semânticos expostos em
+ * `@theme inline` (ex.: `bg-brand-primary`, `text-heading`, `border-line`)
+ * e nunca classes de marca diretas como `blue-*`, `slate-*` ou `indigo-*`.
+ *
+ * Camadas:
+ *   1. Paleta institucional (valores literais do Manual de Identidade Visual)
+ *   2. Paleta de maturidade digital (uso exclusivo para dados de maturidade)
+ *   3. Estados operacionais (isolados, pendentes de aprovação institucional)
+ *   4. Tokens semânticos por tema (claro = referência; escuro = derivado)
+ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    /* 1. Paleta institucional ------------------------------------------- */
+    --cd-purple-deep: #4d0c74;
+    --cd-purple: #69139d;
+    --cd-purple-dark: #331549;
+    --cd-cyan-dark: #0a7c90;
+    --cd-cyan-light: #3fbfd1;
+    --cd-gray-text: #58595b;
+    --cd-gray-light: #e9e9ec;
+    --cd-white: #ffffff;
+
+    /* 2. Paleta de maturidade digital ----------------------------------- */
+    /* Uso exclusivo quando o dado representado é um nível de maturidade.  */
+    --maturity-baixo: #9e9e9e;
+    --maturity-inicial: #c0392b;
+    --maturity-em-desenvolvimento: #e08e0b;
+    --maturity-intermediario: #0a7c90;
+    --maturity-avancado: #4d0c74;
+
+    /* 3. Estados operacionais (PENDENTE DE APROVAÇÃO) ------------------- */
+    /* Não fazem parte da paleta oficial nem da paleta de maturidade.      */
+    /* Devem sempre ser acompanhados de texto e/ou ícone.                  */
+    --status-success-base: #1f7a4d;
+    --status-warning-base: #8a5300;
+    --status-danger-base: #b42318;
+    --status-info-base: var(--cd-cyan-dark);
+
+    /* 4. Tokens semânticos — tema claro (referência do manual) ---------- */
+    --canvas: color-mix(in srgb, var(--cd-gray-light) 60%, var(--cd-white));
+    --surface: var(--cd-white);
+    --surface-muted: color-mix(in srgb, var(--cd-gray-light) 40%, var(--cd-white));
+    --surface-strong: var(--cd-gray-light);
+
+    --heading: var(--cd-purple-dark);
+    --body: var(--cd-gray-text);
+    --muted: color-mix(in srgb, var(--cd-gray-text) 90%, var(--cd-white));
+
+    --line: var(--cd-gray-light);
+    --line-strong: color-mix(in srgb, var(--cd-gray-text) 30%, var(--cd-white));
+
+    --brand-primary: var(--cd-purple);
+    --brand-primary-hover: var(--cd-purple-deep);
+    --on-brand: var(--cd-white);
+    --brand-subtle: color-mix(in srgb, var(--cd-purple) 8%, var(--cd-white));
+    --brand-text: var(--cd-purple);
+
+    --accent: var(--cd-cyan-dark);
+    --accent-subtle: color-mix(in srgb, var(--cd-cyan-dark) 10%, var(--cd-white));
+    --accent-text: var(--cd-cyan-dark);
+
+    --focus-ring: var(--cd-cyan-dark);
+
+    --sidebar: var(--cd-purple-deep);
+    --sidebar-fg: var(--cd-white);
+    --sidebar-muted: color-mix(in srgb, var(--cd-white) 75%, var(--cd-purple-deep));
+    --sidebar-line: color-mix(in srgb, var(--cd-white) 14%, var(--cd-purple-deep));
+    --sidebar-hover: color-mix(in srgb, var(--cd-white) 10%, var(--cd-purple-deep));
+    --sidebar-active: var(--cd-purple);
+    --sidebar-indicator: var(--cd-cyan-light);
+
+    --status-success: var(--status-success-base);
+    --status-warning: var(--status-warning-base);
+    --status-danger: var(--status-danger-base);
+    --status-info: var(--status-info-base);
+    --status-success-text: var(--status-success-base);
+    --status-warning-text: var(--status-warning-base);
+    --status-danger-text: var(--status-danger-base);
+    --status-info-text: var(--status-info-base);
+
+    /* Derivados: resolvidos contra a superfície do tema ativo. */
+    --status-success-subtle: color-mix(in srgb, var(--status-success) 10%, var(--surface));
+    --status-warning-subtle: color-mix(in srgb, var(--status-warning) 10%, var(--surface));
+    --status-danger-subtle: color-mix(in srgb, var(--status-danger) 10%, var(--surface));
+    --status-info-subtle: color-mix(in srgb, var(--status-info) 10%, var(--surface));
+    --status-success-line: color-mix(in srgb, var(--status-success) 35%, var(--surface));
+    --status-warning-line: color-mix(in srgb, var(--status-warning) 35%, var(--surface));
+    --status-danger-line: color-mix(in srgb, var(--status-danger) 35%, var(--surface));
+    --status-info-line: color-mix(in srgb, var(--status-info) 35%, var(--surface));
+
     --radius: 0.5rem;
   }
 
+  /*
+   * Tema escuro — derivado exclusivamente da paleta oficial (roxo escuro,
+   * branco, cinzas e ciano). Aprovação visual pela coordenação pendente.
+   */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --canvas: color-mix(in srgb, var(--cd-purple-dark) 60%, #000000);
+    --surface: color-mix(in srgb, var(--cd-purple-dark) 85%, #000000);
+    --surface-muted: var(--cd-purple-dark);
+    --surface-strong: color-mix(in srgb, var(--cd-purple-dark) 85%, var(--cd-white));
+
+    --heading: var(--cd-white);
+    --body: var(--cd-gray-light);
+    --muted: color-mix(in srgb, var(--cd-gray-light) 72%, var(--cd-purple-dark));
+
+    --line: color-mix(in srgb, var(--cd-white) 12%, var(--cd-purple-dark));
+    --line-strong: color-mix(in srgb, var(--cd-white) 24%, var(--cd-purple-dark));
+
+    --brand-primary: var(--cd-purple);
+    --brand-primary-hover: color-mix(in srgb, var(--cd-purple) 85%, var(--cd-white));
+    --on-brand: var(--cd-white);
+    --brand-subtle: color-mix(in srgb, var(--cd-purple) 35%, var(--cd-purple-dark));
+    --brand-text: var(--cd-cyan-light);
+
+    --accent: var(--cd-cyan-light);
+    --accent-subtle: color-mix(in srgb, var(--cd-cyan-dark) 30%, var(--cd-purple-dark));
+    --accent-text: var(--cd-cyan-light);
+
+    --focus-ring: var(--cd-cyan-light);
+
+    --sidebar: color-mix(in srgb, var(--cd-purple-dark) 75%, #000000);
+    --sidebar-fg: var(--cd-white);
+    --sidebar-muted: color-mix(in srgb, var(--cd-gray-light) 72%, var(--cd-purple-dark));
+    --sidebar-line: color-mix(in srgb, var(--cd-white) 10%, var(--cd-purple-dark));
+    --sidebar-hover: color-mix(in srgb, var(--cd-white) 8%, var(--cd-purple-dark));
+    --sidebar-active: var(--cd-purple);
+    --sidebar-indicator: var(--cd-cyan-light);
+
+    --status-info-base: var(--cd-cyan-light);
+    --status-success-text: color-mix(in srgb, var(--status-success-base) 45%, var(--cd-white));
+    --status-warning-text: color-mix(in srgb, var(--status-warning-base) 40%, var(--cd-white));
+    --status-danger-text: color-mix(in srgb, var(--status-danger-base) 40%, var(--cd-white));
+    --status-info-text: var(--cd-cyan-light);
+    --status-success-subtle: color-mix(in srgb, var(--status-success) 25%, var(--surface));
+    --status-warning-subtle: color-mix(in srgb, var(--status-warning) 25%, var(--surface));
+    --status-danger-subtle: color-mix(in srgb, var(--status-danger) 25%, var(--surface));
+    --status-info-subtle: color-mix(in srgb, var(--status-info) 18%, var(--surface));
+    --status-success-line: color-mix(in srgb, var(--status-success) 55%, var(--surface));
+    --status-warning-line: color-mix(in srgb, var(--status-warning) 55%, var(--surface));
+    --status-danger-line: color-mix(in srgb, var(--status-danger) 55%, var(--surface));
+    --status-info-line: color-mix(in srgb, var(--status-info) 45%, var(--surface));
   }
 }
 
-body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+/* Exposição dos tokens semânticos como utilitários Tailwind. */
+@theme inline {
+  --font-sans: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-strong: var(--surface-strong);
+
+  --color-heading: var(--heading);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-on-brand: var(--on-brand);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-text: var(--brand-text);
+  --color-brand-deep: var(--cd-purple-deep);
+  --color-brand-dark: var(--cd-purple-dark);
+
+  --color-accent: var(--accent);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-text: var(--accent-text);
+
+  --color-focus-ring: var(--focus-ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-fg: var(--sidebar-fg);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-line: var(--sidebar-line);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-indicator: var(--sidebar-indicator);
+
+  --color-success: var(--status-success);
+  --color-success-text: var(--status-success-text);
+  --color-success-subtle: var(--status-success-subtle);
+  --color-success-line: var(--status-success-line);
+  --color-warning: var(--status-warning);
+  --color-warning-text: var(--status-warning-text);
+  --color-warning-subtle: var(--status-warning-subtle);
+  --color-warning-line: var(--status-warning-line);
+  --color-danger: var(--status-danger);
+  --color-danger-text: var(--status-danger-text);
+  --color-danger-subtle: var(--status-danger-subtle);
+  --color-danger-line: var(--status-danger-line);
+  --color-info: var(--status-info);
+  --color-info-text: var(--status-info-text);
+  --color-info-subtle: var(--status-info-subtle);
+  --color-info-line: var(--status-info-line);
+
+  /* Maturidade digital — uso restrito a componentes de maturidade. */
+  --color-maturity-baixo: var(--maturity-baixo);
+  --color-maturity-inicial: var(--maturity-inicial);
+  --color-maturity-em-desenvolvimento: var(--maturity-em-desenvolvimento);
+  --color-maturity-intermediario: var(--maturity-intermediario);
+  --color-maturity-avancado: var(--maturity-avancado);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--body);
+    font-family: var(--font-sans);
+  }
+
+  /* Controles herdam a tipografia institucional (Arial). */
+  button,
+  input,
+  select,
+  textarea,
+  optgroup {
+    font-family: inherit;
+  }
+
+  /* Foco visível padrão para elementos sem estilo de foco próprio. */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  a {
+    color: inherit;
+  }
 }
