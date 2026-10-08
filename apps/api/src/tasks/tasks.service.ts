@@ -12,6 +12,7 @@ import {
   TaskDto,
   TaskPriorityEnum,
   TaskStatusEnum,
+  TaskCategoryEnum,
   UpdateTaskDto,
 } from './task.dto';
 
@@ -40,6 +41,7 @@ export class TasksService {
         title: dto.title.trim(),
         description: dto.description?.trim() || null,
         priority: (dto.priority as TaskPriorityEnum) || TaskPriorityEnum.MEDIUM,
+        category: dto.category as any, // NOVO: Salva a categoria no banco de dados
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         ownerId,
       },
@@ -66,7 +68,7 @@ export class TasksService {
       deletedAt: null,
     };
 
-    // Autorização: Usuários comuns veem apenas suas próprias tarefas; ADMIN pode ver todas
+
     if (user.role !== 'ADMIN') {
       where.ownerId = user.id;
     }
@@ -87,7 +89,13 @@ export class TasksService {
       where.priority = query.priority;
     }
 
-    const allowedSortFields = ['createdAt', 'dueDate', 'title', 'priority', 'status'];
+  
+    if (query.category) {
+      where.category = query.category;
+    }
+
+  
+    const allowedSortFields = ['createdAt', 'dueDate', 'title', 'priority', 'status', 'category'];
     const sortBy = allowedSortFields.includes(query.sortBy || '') ? query.sortBy! : 'createdAt';
     const sortOrder = query.sortOrder === 'asc' ? 'asc' : 'desc';
 
@@ -113,7 +121,7 @@ export class TasksService {
     const totalPages = Math.ceil(total / pageSize) || 1;
 
     return {
-      data: items.map((item) => this.serializeTask(item)),
+     data: items.map((item: any) => this.serializeTask(item)),
       meta: {
         page,
         pageSize,
@@ -167,7 +175,7 @@ export class TasksService {
       throw new ForbiddenException('Você não tem permissão para modificar esta tarefa.');
     }
 
-    // Regra de Negócio de Referência: Tarefas concluídas não podem ser alteradas sem reabrir
+  
     const isReopening = dto.status && dto.status !== TaskStatusEnum.COMPLETED;
     const isAlreadyCompleted = existing.status === TaskStatusEnum.COMPLETED;
     const hasFieldChanges =
@@ -199,6 +207,7 @@ export class TasksService {
         ...(dto.description !== undefined ? { description: dto.description.trim() || null } : {}),
         ...(dto.status !== undefined ? { status: dto.status as TaskStatusEnum } : {}),
         ...(dto.priority !== undefined ? { priority: dto.priority as TaskPriorityEnum } : {}),
+        ...(dto.category !== undefined ? { category: dto.category as any } : {}), // NOVO: Atualiza a categoria
         ...(dto.dueDate !== undefined ? { dueDate: dto.dueDate ? new Date(dto.dueDate) : null } : {}),
       },
       include: {
@@ -231,7 +240,7 @@ export class TasksService {
       throw new ForbiddenException('Você não tem permissão para excluir esta tarefa.');
     }
 
-    // Remoção lógica (Soft Delete)
+
     await this.prisma.task.update({
       where: { id },
       data: {
@@ -247,6 +256,7 @@ export class TasksService {
       description: task.description,
       status: task.status as TaskStatusEnum,
       priority: task.priority as TaskPriorityEnum,
+      category: task.category as TaskCategoryEnum, // NOVO: Resolve o erro TS18046! Retorna a categoria para o DTO
       dueDate: task.dueDate ? new Date(task.dueDate).toISOString() : null,
       ownerId: task.ownerId,
       owner: task.owner

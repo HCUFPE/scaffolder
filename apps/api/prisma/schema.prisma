@@ -26,6 +26,14 @@ enum TaskPriority {
   URGENT
 }
 
+// 1. NOVO ENUM CRIADO PARA A CATEGORIA
+enum TaskCategory {
+  TRABALHO
+  ESTUDOS
+  PESSOAL
+  OUTROS
+}
+
 model UserProfile {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   keycloakUserId String    @unique
@@ -60,6 +68,10 @@ model Task {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
   description String?
+  
+  // 2. NOVO CAMPO ADICIONADO AO MODELO DE TAREFAS
+  category    TaskCategory @default(OUTROS) 
+  
   status      TaskStatus   @default(PENDING)
   priority    TaskPriority @default(MEDIUM)
   dueDate     DateTime?

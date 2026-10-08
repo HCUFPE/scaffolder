@@ -15,4 +15,5 @@ export const TasksControllerFindAllSortBy = {
   title: 'title',
   priority: 'priority',
   status: 'status',
+  category: 'category',
 } as const;
