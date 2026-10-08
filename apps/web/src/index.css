@@ -70,7 +70,7 @@
 
     --focus-ring: var(--cd-cyan-dark);
 
-    --sidebar: var(--cd-purple-deep);
+    --sidebar: var(--cd-purple-dark);
     --sidebar-fg: var(--cd-white);
     --sidebar-muted: color-mix(in srgb, var(--cd-white) 75%, var(--cd-purple-deep));
     --sidebar-line: color-mix(in srgb, var(--cd-white) 14%, var(--cd-purple-deep));
@@ -129,7 +129,7 @@
 
     --focus-ring: var(--cd-cyan-light);
 
-    --sidebar: color-mix(in srgb, var(--cd-purple-dark) 75%, #000000);
+    --sidebar: var(--cd-purple-dark);
     --sidebar-fg: var(--cd-white);
     --sidebar-muted: color-mix(in srgb, var(--cd-gray-light) 72%, var(--cd-purple-dark));
     --sidebar-line: color-mix(in srgb, var(--cd-white) 10%, var(--cd-purple-dark));
